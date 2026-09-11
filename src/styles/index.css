@@ -1,0 +1,278 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =====================================================================
+   WagerLens design tokens
+   ---------------------------------------------------------------------
+   Monochrome first. One accent, used sparingly for focus, live state and
+   a single emphasised figure. Profit/loss are carried by a semantic hue
+   plus a glyph, never by hue alone.
+   ===================================================================== */
+
+:root,
+:root[data-theme='light'] {
+  --wl-paper: 244 243 239; /* warm off-white ground */
+  --wl-surface: 250 249 246;
+  --wl-raised: 255 255 255;
+  --wl-ink: 20 19 16;
+  --wl-muted: 106 104 96;
+  --wl-faint: 150 147 138;
+  --wl-line: 215 212 203;
+  --wl-line-strong: 26 25 22;
+  --wl-accent: 222 68 0;
+  --wl-pos: 27 104 62;
+  --wl-neg: 176 48 26;
+  --wl-grid: 0 0 0;
+  --wl-grid-alpha: 0.055;
+}
+
+:root[data-theme='dark'] {
+  --wl-paper: 10 10 10;
+  --wl-surface: 17 17 17;
+  --wl-raised: 24 24 24;
+  --wl-ink: 242 241 236;
+  --wl-muted: 140 138 130;
+  --wl-faint: 99 97 91;
+  --wl-line: 43 43 42;
+  --wl-line-strong: 224 223 218;
+  --wl-accent: 255 91 26;
+  --wl-pos: 92 186 128;
+  --wl-neg: 233 106 78;
+  --wl-grid: 255 255 255;
+  --wl-grid-alpha: 0.05;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    @apply border-line;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+    font-feature-settings: 'tnum' 1, 'cv05' 1;
+    /* The whole-page theme cross-fade. Kept to colour properties only so no
+       layout work is triggered by the switch. */
+    transition:
+      background-color 320ms cubic-bezier(0.2, 0.9, 0.25, 1),
+      color 320ms cubic-bezier(0.2, 0.9, 0.25, 1);
+  }
+
+  /* Elements that carry the palette follow the same curve, so the interface
+     resolves as one surface rather than a cascade of independent fades. */
+  .wl-themed,
+  .wl-panel,
+  .wl-hairline,
+  button,
+  input,
+  select,
+  table,
+  th,
+  td {
+    transition:
+      background-color 320ms cubic-bezier(0.2, 0.9, 0.25, 1),
+      border-color 320ms cubic-bezier(0.2, 0.9, 0.25, 1),
+      color 320ms cubic-bezier(0.2, 0.9, 0.25, 1);
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2;
+    --tw-ring-offset-color: rgb(var(--wl-paper));
+  }
+
+  ::selection {
+    background: rgb(var(--wl-accent) / 0.25);
+  }
+
+  /* Numerals are engineered: fixed advance width everywhere they carry data. */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+
+  /* Honour the OS setting: motion collapses to instant, the interface does not. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* --- Structural panels ------------------------------------------- */
+
+  .wl-panel {
+    @apply border border-line bg-surface;
+  }
+
+  /* Section heading rail: a label, a rule, and optional trailing controls. */
+  .wl-rail {
+    @apply flex items-center gap-3 border-b border-line pb-2;
+  }
+
+  .wl-label {
+    @apply font-mono text-2xs uppercase tracking-[0.14em] text-muted;
+  }
+
+  .wl-label-strong {
+    @apply font-mono text-2xs uppercase tracking-[0.14em] text-ink;
+  }
+
+  .wl-meta {
+    @apply font-mono text-3xs uppercase tracking-[0.12em] text-faint;
+  }
+
+  /* Registration tick — a small instrument marker used beside headings. */
+  .wl-tick::before {
+    content: '';
+    @apply mr-2 inline-block h-[7px] w-[7px] border border-line-strong align-middle;
+  }
+
+  /* --- Controls ----------------------------------------------------- */
+
+  .wl-button {
+    @apply inline-flex select-none items-center justify-center gap-2 border border-line bg-surface
+           px-3 py-1.5 font-mono text-2xs uppercase tracking-[0.12em] text-ink
+           transition-[background-color,border-color,color,transform] duration-150 ease-instrument
+           hover:border-line-strong active:translate-y-px disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  .wl-button-primary {
+    @apply border-line-strong bg-ink text-paper hover:opacity-90;
+  }
+
+  .wl-button-ghost {
+    @apply border-transparent bg-transparent hover:border-line;
+  }
+
+  /* Segmented control: one hairline box, dividers between cells. */
+  .wl-segment {
+    @apply inline-flex items-stretch border border-line bg-surface;
+  }
+
+  .wl-segment > button {
+    @apply border-l border-line px-2.5 py-1 font-mono text-2xs uppercase tracking-[0.1em]
+           text-muted transition-colors duration-150 first:border-l-0 hover:text-ink;
+  }
+
+  .wl-segment > button[aria-pressed='true'],
+  .wl-segment > button[data-active='true'] {
+    @apply bg-ink text-paper;
+  }
+
+  .wl-input {
+    @apply w-full border border-line bg-raised px-2.5 py-1.5 font-mono text-xs text-ink
+           placeholder:text-faint focus:border-line-strong;
+  }
+
+  .wl-select {
+    @apply w-full appearance-none border border-line bg-raised px-2.5 py-1.5 pr-7 font-mono text-xs
+           text-ink focus:border-line-strong;
+  }
+
+  /* --- Data display ------------------------------------------------- */
+
+  .wl-table {
+    @apply w-full border-collapse text-left;
+  }
+
+  .wl-table th {
+    @apply whitespace-nowrap border-b border-line px-3 py-2 font-mono text-3xs font-normal
+           uppercase tracking-[0.12em] text-muted;
+  }
+
+  .wl-table td {
+    @apply whitespace-nowrap border-b border-line/60 px-3 py-2 text-xs;
+  }
+
+  .wl-table tbody tr {
+    @apply transition-colors duration-100;
+  }
+
+  .wl-table tbody tr:hover {
+    background: rgb(var(--wl-grid) / var(--wl-grid-alpha));
+  }
+
+  .wl-sortable {
+    @apply cursor-pointer select-none hover:text-ink;
+  }
+
+  /* Positive/negative are marked with a hue AND a glyph so the distinction
+     survives a monochrome display or colour-vision deficiency. */
+  .wl-pos {
+    @apply text-pos;
+  }
+
+  .wl-neg {
+    @apply text-neg;
+  }
+
+  /* Hairline rule used as a section separator and in the header. */
+  .wl-hairline {
+    @apply h-px w-full bg-line;
+  }
+
+  /* Perforated grid backdrop — the instrument-panel texture. */
+  .wl-grid-bg {
+    background-image: radial-gradient(rgb(var(--wl-grid) / 0.14) 0.5px, transparent 0.5px);
+    background-size: 4px 4px;
+  }
+
+  /* Focus ring for the whole drop target rather than a nested input. */
+  .wl-drop {
+    @apply relative border border-dashed border-line bg-surface
+           transition-[border-color,background-color] duration-200 ease-instrument;
+  }
+
+  .wl-drop[data-dragging='true'] {
+    @apply border-solid border-accent;
+    background: rgb(var(--wl-accent) / 0.05);
+  }
+}
+
+@layer utilities {
+  /* Stagger helper for section entrances. */
+  .wl-stagger > * {
+    animation: rise-in 380ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
+  }
+
+  .wl-stagger > *:nth-child(1) { animation-delay: 0ms; }
+  .wl-stagger > *:nth-child(2) { animation-delay: 45ms; }
+  .wl-stagger > *:nth-child(3) { animation-delay: 90ms; }
+  .wl-stagger > *:nth-child(4) { animation-delay: 135ms; }
+  .wl-stagger > *:nth-child(5) { animation-delay: 180ms; }
+  .wl-stagger > *:nth-child(6) { animation-delay: 225ms; }
+  .wl-stagger > *:nth-child(n + 7) { animation-delay: 270ms; }
+
+  /* Recharts paints its own text nodes; steer them onto the token palette. */
+  .recharts-cartesian-axis-tick-value,
+  .recharts-label {
+    fill: rgb(var(--wl-faint));
+    font-family: var(--wl-mono, ui-monospace, monospace);
+    font-size: 10px;
+  }
+
+  .recharts-cartesian-grid line {
+    stroke: rgb(var(--wl-line));
+  }
+
+  .recharts-surface:focus {
+    outline: none;
+  }
+}
