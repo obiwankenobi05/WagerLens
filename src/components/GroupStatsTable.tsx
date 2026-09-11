@@ -129,14 +129,65 @@ export function GroupStatsTable({
   }
 
   return (
-    <DataTable
-      rows={rows}
-      columns={columns}
-      rowKey={(row) => row.key}
-      defaultSort={{ key: defaultSortKey, direction: 'desc' }}
-      caption={caption}
-      emptyMessage="No rows for this grouping in the current selection."
-    />
+    <>
+      {/* Phones get cards: a nine-column table forced into 360px is a
+          horizontal-scroll puzzle, not a readable comparison. */}
+      <ul className="flex flex-col gap-1.5 sm:hidden">
+        {rows.length === 0 && (
+          <li className="border border-dashed border-line px-4 py-6 text-center text-[11px] text-muted">
+            No rows for this grouping in the current selection.
+          </li>
+        )}
+        {rows.map((row) => (
+          <li key={row.key} className="border border-line px-3 py-2.5">
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="truncate font-mono text-xs text-ink">{row.label}</span>
+              <span className="tnum shrink-0 font-mono text-xs">
+                <SignedValue value={row.netPnl} format={formatAmount} />
+              </span>
+            </div>
+            <dl className="mt-2 grid grid-cols-3 gap-x-3 gap-y-1.5">
+              {[
+                ['Bets', formatCount(row.bets)],
+                ['Wagered', formatAmount(row.wagered)],
+                ['ROI', row.roi === null ? '—' : formatSignedPercent(row.roi)],
+                ['Returned', formatAmount(row.returned)],
+                ['Win rate', formatPercent(row.winRate)],
+                ['Avg bet', row.averageStake === null ? '—' : formatAmount(row.averageStake)],
+              ].map(([term, value]) => (
+                <div key={term} className="min-w-0">
+                  <dt className="wl-meta truncate">{term}</dt>
+                  <dd className="tnum truncate font-mono text-[11px] text-ink">{value}</dd>
+                </div>
+              ))}
+            </dl>
+            {showShare && (
+              <div className="mt-2 flex items-center gap-2">
+                <Bar
+                  value={row.wagered}
+                  max={maxWagered}
+                  label={`${row.label}: ${formatPercent(row.shareOfWagered, 0)} of wagered volume`}
+                />
+                <span className="tnum shrink-0 font-mono text-[10px] text-muted">
+                  {formatPercent(row.shareOfWagered, 0)}
+                </span>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      <div className="hidden sm:block">
+        <DataTable
+          rows={rows}
+          columns={columns}
+          rowKey={(row) => row.key}
+          defaultSort={{ key: defaultSortKey, direction: 'desc' }}
+          caption={caption}
+          emptyMessage="No rows for this grouping in the current selection."
+        />
+      </div>
+    </>
   );
 }
 

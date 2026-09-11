@@ -131,8 +131,8 @@ export function CrashSection({
       label="Crash"
       actions={<span className="wl-meta">{formatCount(stats.bets)} rounds</span>}
     >
-      <div className="grid min-w-0 gap-4 lg:grid-cols-[260px_1fr]">
-        <dl className="flex min-w-0 flex-col lg:border-r lg:border-line lg:pr-4">
+      <div className="grid min-w-0 gap-4 lg:grid-cols-[240px_1fr] xl:grid-cols-[260px_1fr]">
+        <dl className="grid min-w-0 grid-cols-2 gap-x-4 sm:grid-cols-3 lg:grid-cols-1 lg:border-r lg:border-line lg:pr-4">
           <Stat label="Wagered" value={`${formatAmount(stats.wagered)} ${code}`} />
           <Stat label="P&L" value={<SignedValue value={stats.netPnl} format={formatAmount} />} />
           <Stat

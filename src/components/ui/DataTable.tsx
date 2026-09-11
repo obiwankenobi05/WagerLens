@@ -28,6 +28,8 @@ export function DataTable<Row>({
   rowKey,
   caption,
   emptyMessage = 'No rows match the current filters.',
+  onRowClick,
+  rowClassName,
 }: {
   rows: Row[];
   columns: Array<Column<Row>>;
@@ -35,6 +37,9 @@ export function DataTable<Row>({
   rowKey: (row: Row, index: number) => string;
   caption?: string;
   emptyMessage?: string;
+  /** Makes rows interactive. Omit for a purely presentational table. */
+  onRowClick?: (row: Row) => void;
+  rowClassName?: (row: Row) => string | undefined;
 }) {
   const [sort, setSort] = useState(defaultSort ?? null);
 
@@ -115,7 +120,11 @@ export function DataTable<Row>({
         </thead>
         <tbody>
           {sorted.map((row, index) => (
-            <tr key={rowKey(row, index)}>
+            <tr
+              key={rowKey(row, index)}
+              className={cx(onRowClick && 'cursor-pointer', rowClassName?.(row))}
+              onClick={onRowClick ? () => onRowClick(row) : undefined}
+            >
               {columns.map((column) => (
                 <td
                   key={column.key}

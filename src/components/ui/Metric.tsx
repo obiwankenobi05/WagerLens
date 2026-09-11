@@ -92,13 +92,15 @@ export function Stat({
   title?: string;
 }) {
   return (
-    <div className="flex items-baseline justify-between gap-3 border-b border-line/60 py-1.5 last:border-b-0">
+    // Stacked on narrow screens (where these sit in a grid) and as a
+    // label/value row once there is width for one.
+    <div className="flex flex-col gap-0.5 border-b border-line/60 py-1.5 last:border-b-0 lg:flex-row lg:items-baseline lg:justify-between lg:gap-3">
       <span className="wl-label truncate" title={title}>
         {label}
       </span>
       <span
         className={cx(
-          'tnum shrink-0 font-mono text-xs',
+          'tnum truncate font-mono text-xs lg:shrink-0',
           tone === 'pos' && 'wl-pos',
           tone === 'neg' && 'wl-neg',
         )}

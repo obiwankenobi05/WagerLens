@@ -118,6 +118,10 @@ export interface BetRecord {
   crash?: CrashDetail;
   plinko?: PlinkoDetail;
   mines?: MinesDetail;
+  /** Id of the uploaded file this bet came from. */
+  sourceFileId: string;
+  /** Name of that file, for display. */
+  sourceFileName: string;
   /** Untouched archive record, for the raw-record view. */
   raw: unknown;
 }
@@ -129,7 +133,8 @@ export type ExclusionReason =
   | 'active'
   | 'malformed'
   | 'unparseable-date'
-  | 'invalid-amounts';
+  | 'invalid-amounts'
+  | 'duplicate';
 
 /** One dropped record, retained so the data-quality panel can explain itself. */
 export interface ExcludedRecord {
@@ -163,6 +168,36 @@ export interface ParseResult {
   quality: DataQuality;
   /** Earliest and latest bet timestamps, or null when there are no bets. */
   range: { from: Date; to: Date } | null;
+}
+
+/** One uploaded file and what came out of it. */
+export interface ArchiveFile {
+  id: string;
+  name: string;
+  size: number;
+  /** Milliseconds spent parsing this file. */
+  parseMs: number;
+  /** Bets contributed after cross-file de-duplication. */
+  bets: BetRecord[];
+  quality: DataQuality;
+  range: { from: Date; to: Date } | null;
+  /** Currencies present in this file. */
+  currencies: string[];
+  /** Set when the file could not be read at all. */
+  error?: { message: string; detail?: string };
+}
+
+/** The merged archive across every successfully parsed file. */
+export interface ArchiveBundle {
+  files: ArchiveFile[];
+  /** Every bet from every file, de-duplicated and sorted oldest first. */
+  bets: BetRecord[];
+  quality: DataQuality;
+  range: { from: Date; to: Date } | null;
+  /** Files that failed outright. */
+  failed: ArchiveFile[];
+  /** Bets dropped because an earlier file already contained them. */
+  duplicatesRemoved: number;
 }
 
 /** A parse failure the user needs to see, with a remedy where one exists. */

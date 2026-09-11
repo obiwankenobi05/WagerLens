@@ -5,7 +5,7 @@ import type { Overview } from '@/analytics';
 import { cx, formatCount, formatPercent } from '@/utils/format';
 
 /** The accounting rules, restated for the reader in the same terms as the code. */
-function Methodology({ currency }: { currency: string }) {
+function Methodology({ currency, converted }: { currency: string; converted: boolean }) {
   const [open, setOpen] = useState(false);
   const code = currency.toUpperCase();
 
@@ -29,8 +29,8 @@ function Methodology({ currency }: { currency: string }) {
       {/* Grid-rows trick: animates height without measuring the content. */}
       <div
         className={cx(
-          'grid transition-[grid-template-rows,opacity] duration-300 ease-instrument',
-          open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0',
+          'grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-instrument',
+          open ? 'visible grid-rows-[1fr] opacity-100' : 'invisible grid-rows-[0fr] opacity-0',
         )}
       >
         <div className="overflow-hidden">
@@ -62,9 +62,22 @@ function Methodology({ currency }: { currency: string }) {
             <p className="border-t border-line pt-3">
               <span className="text-ink">Excluded from every figure:</span> rejected bets (the stake
               was returned, so the archive records payout equal to amount), cancelled or voided
-              wagers, and any bet still open at export time. All figures are in {code} as recorded —
-              no currency is ever converted.
+              wagers, and any bet still open at export time.
             </p>
+            {converted ? (
+              <p>
+                <span className="text-ink">On conversion:</span> every amount has been multiplied by
+                a single current exchange rate, so historical figures are expressed at today's
+                price rather than the price at the time of each bet. That makes totals comparable
+                across currencies, but it is not what the bets were worth when they were placed.
+                Switch conversion off to see the amounts exactly as recorded.
+              </p>
+            ) : (
+              <p>
+                All figures are in {code} exactly as recorded. Currencies are never mixed or
+                silently converted.
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -76,10 +89,13 @@ export function OverviewSection({
   overview,
   formatAmount,
   filtered,
+  converted,
 }: {
   overview: Overview;
   formatAmount: (value: number) => string;
   filtered: boolean;
+  /** True when every figure has been converted from its recorded currency. */
+  converted: boolean;
 }) {
   const code = overview.currency.toUpperCase();
   const amount = (value: number) => formatAmount(value);
@@ -91,13 +107,14 @@ export function OverviewSection({
           <span className="wl-meta text-accent">01</span>
           <h2 className="wl-label-strong">Overview</h2>
         </div>
-        <span className="wl-meta">
+        <span className="wl-meta flex items-center gap-1.5">
           {filtered ? 'Filtered selection' : 'All records'} · {code}
+          {converted && <span className="text-accent">converted</span>}
         </span>
       </header>
 
       {/* Primary row. Net P&L is the one figure given emphasis. */}
-      <div className="grid grid-cols-2 gap-px bg-line sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-px bg-line md:grid-cols-3 lg:grid-cols-5">
         {[
           <Metric
             key="wagered"
@@ -144,14 +161,17 @@ export function OverviewSection({
             }`}
           />,
         ].map((metric, index) => (
-          <div key={metric.key} className={cx('bg-surface px-3 py-3 sm:px-4', index === 4 && 'col-span-2 sm:col-span-1')}>
+          <div
+            key={metric.key}
+            className={cx('bg-surface px-3 py-3 sm:px-4', index === 4 && 'col-span-2 md:col-span-1')}
+          >
             {metric}
           </div>
         ))}
       </div>
 
       {/* Secondary row. Same grid, lighter weight. */}
-      <div className="grid grid-cols-2 gap-px border-t border-line bg-line sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-px border-t border-line bg-line md:grid-cols-3 lg:grid-cols-5">
         {[
           <Metric
             key="winrate"
@@ -191,13 +211,16 @@ export function OverviewSection({
             sub="peak to trough"
           />,
         ].map((metric, index) => (
-          <div key={metric.key} className={cx('bg-surface px-3 py-3 sm:px-4', index === 4 && 'col-span-2 sm:col-span-1')}>
+          <div
+            key={metric.key}
+            className={cx('bg-surface px-3 py-3 sm:px-4', index === 4 && 'col-span-2 md:col-span-1')}
+          >
             {metric}
           </div>
         ))}
       </div>
 
-      <Methodology currency={overview.currency} />
+      <Methodology currency={overview.currency} converted={converted} />
     </section>
   );
 }

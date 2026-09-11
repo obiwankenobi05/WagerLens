@@ -20,14 +20,14 @@ export function ThemeToggle({ theme, onToggle }: { theme: Theme; onToggle: () =>
       aria-checked={isDark}
       aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
       onClick={onToggle}
-      className="group relative flex h-7 w-[52px] shrink-0 items-center border border-line bg-surface
-                 transition-colors duration-200 hover:border-line-strong"
+      className="group relative flex h-8 w-[54px] shrink-0 items-center border border-line bg-surface
+                 transition-colors duration-200 hover:border-line-strong sm:h-7 sm:w-[52px]"
       title={`${isDark ? 'Dark' : 'Light'} — click to switch`}
     >
       {/* Travelling block. 2px inset keeps the hairline visible on both sides. */}
       <span
         aria-hidden
-        className="absolute top-[2px] h-[22px] w-[22px] bg-ink
+        className="absolute top-[2px] h-[26px] w-[24px] bg-ink sm:h-[22px] sm:w-[22px]
                    transition-transform duration-300 ease-instrument
                    group-active:scale-95"
         style={{ transform: `translateX(${isDark ? 26 : 2}px)` }}

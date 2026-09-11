@@ -1,41 +1,139 @@
 import { useCallback, useRef, useState } from 'react';
-import { AlertTriangle, FileJson, Lock, Upload } from 'lucide-react';
+import { AlertTriangle, ChevronDown, FileJson, Lock, Upload } from 'lucide-react';
 import { Wordmark } from './Logo';
 import { ThemeToggle } from './ui/ThemeToggle';
 import type { Theme } from '@/hooks/useTheme';
 import type { LoadState } from '@/hooks/useArchive';
+import { cx } from '@/utils/format';
 
-/** Parse-stage readout shown while the archive is being read. */
-function ParsingIndicator({ fileName }: { fileName: string }) {
+/** Parse-stage readout, with per-file progress when several were dropped. */
+function ParsingIndicator({ label, total, done }: { label: string; total: number; done: number }) {
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   return (
-    <div className="flex flex-col items-center gap-4 py-10" role="status" aria-live="polite">
+    <div className="flex flex-col items-center gap-4 px-5 py-10" role="status" aria-live="polite">
       <div className="relative h-8 w-8">
         <span className="absolute inset-0 border border-line" />
         <span className="absolute inset-0 origin-center animate-tick-spin border-l border-t border-accent" />
       </div>
-      <div className="text-center">
-        <p className="wl-label-strong">Parsing archive</p>
-        <p className="wl-meta mt-1 max-w-[240px] truncate">{fileName}</p>
+      <div className="w-full max-w-[260px] text-center">
+        <p className="wl-label-strong">Reading {total === 1 ? 'archive' : `${total} archives`}</p>
+        <p className="wl-meta mt-1 truncate">{label}</p>
+        {total > 1 && (
+          <div className="mt-3">
+            <div className="h-px w-full bg-line">
+              <div
+                className="h-px bg-accent transition-[width] duration-300 ease-instrument"
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+            <p className="wl-meta mt-1.5 tnum">
+              {done} / {total}
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const STEPS: Array<{ n: string; text: string; hint?: string }> = [
+  { n: '1', text: 'Open your Stake account menu.' },
+  { n: '2', text: 'Go to My Bets.' },
+  { n: '3', text: 'Open the Archive tab.' },
+  {
+    n: '4',
+    text: 'Download the JSON for each date you want to analyse.',
+    hint: 'Stake exports one file per day — there is no way to cover a range in a single file.',
+  },
+  {
+    n: '5',
+    text: 'Drop all of those files here together.',
+    hint: 'WagerLens merges them into one history and also reports each file on its own.',
+  },
+];
+
+/** Collapsible walkthrough for getting the export out of Stake. */
+function ExportGuide() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="wl-panel mt-5 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex min-h-[44px] w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition-colors duration-200 hover:bg-ink/[0.03] sm:px-4"
+      >
+        <span className="flex items-center gap-2">
+          <span className="wl-meta text-accent">?</span>
+          <span className="wl-label-strong">Where do I get the JSON files</span>
+        </span>
+        <ChevronDown
+          size={13}
+          strokeWidth={2}
+          aria-hidden
+          className={cx('shrink-0 text-muted transition-transform duration-300 ease-instrument', open && 'rotate-180')}
+        />
+      </button>
+
+      {/* Animates height without measuring the content. */}
+      <div
+        className={cx(
+          'grid transition-[grid-template-rows,opacity,visibility] duration-300 ease-instrument',
+          open ? 'visible grid-rows-[1fr] opacity-100' : 'invisible grid-rows-[0fr] opacity-0',
+        )}
+      >
+        <div className="overflow-hidden">
+          <ol className="border-t border-line px-3 py-3 sm:px-4">
+            {STEPS.map((step, index) => (
+              <li
+                key={step.n}
+                className="relative flex gap-3 pb-3 last:pb-0"
+                style={open ? { animation: `rise-in 320ms cubic-bezier(0.2,0.9,0.25,1) ${index * 50}ms both` } : undefined}
+              >
+                {/* Connector rail between the step markers. */}
+                {index < STEPS.length - 1 && (
+                  <span aria-hidden className="absolute bottom-0 left-[9px] top-5 w-px bg-line" />
+                )}
+                <span
+                  aria-hidden
+                  className="relative z-10 flex h-[19px] w-[19px] shrink-0 items-center justify-center border border-line-strong bg-surface font-mono text-[10px] text-ink"
+                >
+                  {step.n}
+                </span>
+                <span className="min-w-0 pt-0.5">
+                  <span className="block text-[13px] leading-snug text-ink">{step.text}</span>
+                  {step.hint && (
+                    <span className="mt-1 block text-[11px] leading-relaxed text-muted">{step.hint}</span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ol>
+          <p className="border-t border-line px-3 py-2.5 text-[11px] leading-relaxed text-muted sm:px-4">
+            Files whose dates overlap are fine — a bet appearing in two exports is counted once.
+          </p>
+        </div>
       </div>
     </div>
   );
 }
 
 const SPEC_ROWS: Array<[string, string]> = [
-  ['Format', 'Stake betting archive · JSON'],
+  ['Format', 'Stake archive · JSON'],
+  ['Files', 'One per date · drop many'],
   ['Processing', 'In-browser, single pass'],
-  ['Network', 'None — nothing is uploaded'],
   ['Retention', 'Cleared when you close the tab'],
 ];
 
 export function UploadScreen({
   state,
-  onFile,
+  onFiles,
   theme,
   onToggleTheme,
 }: {
   state: LoadState;
-  onFile: (file: File) => void;
+  onFiles: (files: File[]) => void;
   theme: Theme;
   onToggleTheme: () => void;
 }) {
@@ -44,11 +142,11 @@ export function UploadScreen({
   const loading = state.status === 'loading';
 
   const handleFiles = useCallback(
-    (files: FileList | null) => {
-      const file = files?.[0];
-      if (file) onFile(file);
+    (list: FileList | null) => {
+      if (!list || list.length === 0) return;
+      onFiles(Array.from(list));
     },
-    [onFile],
+    [onFiles],
   );
 
   return (
@@ -58,26 +156,23 @@ export function UploadScreen({
         <ThemeToggle theme={theme} onToggle={onToggleTheme} />
       </header>
 
-      <main className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6">
-        <div className="w-full max-w-[640px] animate-rise-in">
-          <div className="mb-8 sm:mb-10">
+      <main className="flex flex-1 items-center justify-center px-4 py-8 sm:px-6 sm:py-10">
+        <div className="w-full max-w-[660px] animate-rise-in">
+          <div className="mb-7 sm:mb-9">
             <p className="wl-meta mb-3 text-accent">Local analytics instrument</p>
-            <h1 className="text-[clamp(1.75rem,6vw,2.5rem)] font-semibold leading-[1.05] tracking-tight text-ink">
+            <h1 className="text-[clamp(1.6rem,7vw,2.5rem)] font-semibold leading-[1.05] tracking-tight text-ink">
               Your betting history,
               <br />
               analyzed.
             </h1>
-            <p className="mt-4 max-w-[42ch] text-sm leading-relaxed text-muted">
-              Upload a Stake betting archive to see where the money went — P&amp;L over time,
+            <p className="mt-4 max-w-[44ch] text-[13px] leading-relaxed text-muted sm:text-sm">
+              Upload your Stake betting archives to see where the money went — P&amp;L over time,
               drawdowns, game breakdowns and the full ledger behind them.
             </p>
           </div>
 
           {state.status === 'error' && (
-            <div
-              role="alert"
-              className="mb-5 flex gap-3 border border-neg/50 bg-neg/5 px-4 py-3"
-            >
+            <div role="alert" className="mb-5 flex gap-3 border border-neg/50 bg-neg/5 px-4 py-3 animate-rise-in">
               <AlertTriangle size={15} strokeWidth={1.75} className="mt-0.5 shrink-0 text-neg" aria-hidden />
               <div className="min-w-0">
                 <p className="text-xs font-medium text-ink">{state.message}</p>
@@ -90,9 +185,8 @@ export function UploadScreen({
             </div>
           )}
 
-          {/* The drop target is a label wrapping a real file input: the whole
-              panel is clickable, and the control stays keyboard-operable and
-              announced as a file input. */}
+          {/* A label wrapping a real file input: the whole panel is clickable,
+              and the control stays keyboard-operable and correctly announced. */}
           <label
             className="wl-drop block cursor-pointer focus-within:ring-2 focus-within:ring-accent focus-within:ring-offset-2"
             data-dragging={dragging}
@@ -111,16 +205,16 @@ export function UploadScreen({
               ref={inputRef}
               type="file"
               accept="application/json,.json"
+              multiple
               className="sr-only"
               disabled={loading}
               onChange={(event) => {
                 handleFiles(event.target.files);
-                // Reset so re-selecting the same file fires a change event.
+                // Reset so re-selecting the same files fires a change event.
                 event.target.value = '';
               }}
             />
 
-            {/* Corner registration marks — the instrument detail. */}
             <span aria-hidden className="pointer-events-none absolute inset-0">
               {[
                 'left-0 top-0 border-l border-t',
@@ -133,10 +227,15 @@ export function UploadScreen({
             </span>
 
             {loading ? (
-              <ParsingIndicator fileName={state.fileName} />
+              <ParsingIndicator label={state.label} total={state.total} done={state.done} />
             ) : (
-              <div className="flex flex-col items-center gap-5 px-5 py-10 text-center sm:py-12">
-                <span className="flex h-11 w-11 items-center justify-center border border-line-strong">
+              <div className="flex flex-col items-center gap-5 px-5 py-9 text-center sm:py-12">
+                <span
+                  className={cx(
+                    'flex h-11 w-11 items-center justify-center border transition-all duration-300 ease-instrument',
+                    dragging ? 'scale-110 border-accent' : 'border-line-strong',
+                  )}
+                >
                   {dragging ? (
                     <FileJson size={18} strokeWidth={1.5} className="text-accent" aria-hidden />
                   ) : (
@@ -144,10 +243,10 @@ export function UploadScreen({
                   )}
                 </span>
                 <div>
-                  <p className="text-sm text-ink">Drop your Stake JSON here</p>
-                  <p className="wl-meta mt-1.5">or</p>
+                  <p className="text-sm text-ink">Drop your Stake JSON files here</p>
+                  <p className="mt-1.5 text-[11px] text-muted">One file per date — add as many as you like</p>
                 </div>
-                <span className="wl-button wl-button-primary">Choose JSON file</span>
+                <span className="wl-button wl-button-primary min-h-[44px] px-4">Choose JSON files</span>
               </div>
             )}
           </label>
@@ -160,8 +259,9 @@ export function UploadScreen({
             </span>
           </p>
 
-          {/* Spec plate: the technical footnote, laid out like a device label. */}
-          <dl className="mt-8 grid grid-cols-1 border-t border-line sm:grid-cols-2">
+          <ExportGuide />
+
+          <dl className="mt-7 grid grid-cols-1 border-t border-line sm:grid-cols-2">
             {SPEC_ROWS.map(([term, value]) => (
               <div
                 key={term}

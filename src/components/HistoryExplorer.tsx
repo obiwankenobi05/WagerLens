@@ -246,7 +246,7 @@ export function HistoryExplorer({
                             event.stopPropagation();
                             setExpanded((id) => (id === bet.id ? null : bet.id));
                           }}
-                          className="p-1 text-muted transition-colors hover:text-ink"
+                          className="flex min-h-[32px] min-w-[32px] items-center justify-center text-muted transition-colors hover:text-ink"
                         >
                           <ChevronDown
                             size={12}

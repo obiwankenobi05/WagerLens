@@ -219,6 +219,7 @@ function parseMines(d: Json): MinesDetail | null {
 function parseRecord(
   entry: unknown,
   index: number,
+  source: { id: string; name: string },
 ): { bet: BetRecord } | { excluded: ExcludedRecord } {
   const drop = (
     reason: ExclusionReason,
@@ -304,6 +305,8 @@ function parseRecord(
     status,
     active,
     placedOnMobile: d.mobile === true,
+    sourceFileId: source.id,
+    sourceFileName: source.name,
     raw: entry,
   };
 
@@ -328,6 +331,7 @@ const EMPTY_REASONS: Record<ExclusionReason, number> = {
   malformed: 0,
   'unparseable-date': 0,
   'invalid-amounts': 0,
+  duplicate: 0,
 };
 
 /**
@@ -367,7 +371,10 @@ function looksLikeBet(entry: unknown): boolean {
  * carries nothing recognisable as a bet archive. Individual bad records never
  * throw — they land in `quality.excluded`.
  */
-export function parseStakeArchive(rawJson: string): ParseResult {
+export function parseStakeArchive(
+  rawJson: string,
+  source: { id: string; name: string } = { id: 'archive', name: 'archive.json' },
+): ParseResult {
   let root: unknown;
   try {
     root = JSON.parse(rawJson);
@@ -402,7 +409,7 @@ export function parseStakeArchive(rawJson: string): ParseResult {
   const byReason: Record<ExclusionReason, number> = { ...EMPTY_REASONS };
 
   for (let i = 0; i < records.length; i += 1) {
-    const result = parseRecord(records[i], i);
+    const result = parseRecord(records[i], i, source);
     if ('bet' in result) {
       bets.push(result.bet);
     } else {

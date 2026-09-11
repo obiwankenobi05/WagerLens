@@ -41,12 +41,22 @@ export default {
         'fade-in': { from: { opacity: '0' }, to: { opacity: '1' } },
         sweep: { '0%': { transform: 'translateX(-100%)' }, '100%': { transform: 'translateX(200%)' } },
         'tick-spin': { to: { transform: 'rotate(360deg)' } },
+        'pop-in': {
+          from: { opacity: '0', transform: 'scale(0.97) translateY(-4px)' },
+          to: { opacity: '1', transform: 'none' },
+        },
+        'slide-down': {
+          from: { opacity: '0', transform: 'translateY(-8px)' },
+          to: { opacity: '1', transform: 'none' },
+        },
       },
       animation: {
         'rise-in': 'rise-in 380ms cubic-bezier(0.2, 0.9, 0.25, 1) both',
         'fade-in': 'fade-in 260ms ease-out both',
         sweep: 'sweep 1.1s cubic-bezier(0.4, 0, 0.2, 1) infinite',
         'tick-spin': 'tick-spin 1.6s linear infinite',
+        'pop-in': 'pop-in 180ms cubic-bezier(0.2, 0.9, 0.25, 1) both',
+        'slide-down': 'slide-down 260ms cubic-bezier(0.2, 0.9, 0.25, 1) both',
       },
     },
   },

@@ -27,6 +27,23 @@ function decimalsForSignificance(value: number): number {
 }
 
 /**
+ * The most decimals worth showing at a given magnitude.
+ *
+ * Once the largest figure runs to five digits, a four-decimal tail is both
+ * unreadable and false precision — the sub-rupee remainder of a ₹46,132 total
+ * carries no information. This caps what the small-value rule below can ask
+ * for.
+ */
+function maxDecimalsForScale(maxAbs: number): number {
+  if (!Number.isFinite(maxAbs) || maxAbs <= 0) return 2;
+  if (maxAbs >= 10_000) return 2;
+  if (maxAbs >= 1000) return 3;
+  if (maxAbs >= 100) return 4;
+  if (maxAbs >= 1) return 6;
+  return MAX_DECIMALS;
+}
+
+/**
  * Builds a fixed-precision amount formatter for a set of values.
  *
  * Precision is driven from both ends of the range: enough decimals that the
@@ -50,6 +67,7 @@ export function makeAmountFormatter(values: number[]): (value: number) => string
 
   const decimals = Math.min(
     MAX_DECIMALS,
+    maxDecimalsForScale(maxAbs),
     Math.max(
       decimalsForScale(maxAbs),
       Number.isFinite(minNonZero) ? decimalsForSignificance(minNonZero) : 0,

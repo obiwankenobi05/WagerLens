@@ -12,7 +12,15 @@ import {
   YAxis,
 } from 'recharts';
 import type { EquityPoint, PeriodStats, TimeBucket } from '@/analytics';
-import { ChartEmpty, ChartFrame, TooltipBox, makeAxisFormatter, makeTimeTickFormatter } from './ChartFrame';
+import {
+  ChartEmpty,
+  ChartFrame,
+  TooltipBox,
+  axisWidthFor,
+  evenTimeTicks,
+  makeAxisFormatter,
+  makeTimeTickFormatter,
+} from './ChartFrame';
 import { formatCount, formatDate, formatDateTime, formatSigned } from '@/utils/format';
 
 export type PnlMode = 'cumulative' | TimeBucket;
@@ -59,6 +67,16 @@ export function PnlChart({ mode, equity, periods, currency, formatAmount }: PnlC
   const spanMs = data.length > 1 ? data[data.length - 1].x - data[0].x : 0;
   const tickTime = useMemo(() => makeTimeTickFormatter(spanMs), [spanMs]);
   const axisFormat = useMemo(() => makeAxisFormatter(data.map((d) => d.value)), [data]);
+  // Fewer ticks on a narrow chart; the container is fluid so this is sized
+  // from the data rather than the rendered width.
+  const timeTicks = useMemo(
+    () => (data.length > 1 ? evenTimeTicks(data[0].x, data[data.length - 1].x, 6) : []),
+    [data],
+  );
+  const axisWidth = useMemo(
+    () => axisWidthFor(data.map((d) => d.value), axisFormat),
+    [data, axisFormat],
+  );
 
   if (data.length === 0) {
     return (
@@ -99,17 +117,18 @@ export function PnlChart({ mode, equity, periods, currency, formatAmount }: PnlC
             type="number"
             scale="time"
             domain={['dataMin', 'dataMax']}
+            ticks={timeTicks.length > 0 ? timeTicks : undefined}
             tickFormatter={tickTime}
             tickLine={false}
             axisLine={{ stroke: 'currentColor', strokeOpacity: 0.25 }}
-            minTickGap={44}
+            minTickGap={64}
             tickMargin={8}
           />
           <YAxis
             tickFormatter={axisFormat}
             tickLine={false}
             axisLine={false}
-            width={52}
+            width={axisWidth}
             tickMargin={4}
           />
 

@@ -33,7 +33,7 @@ export default function App() {
       <Suspense fallback={<DashboardFallback />}>
         <Dashboard
           archive={archive}
-          result={state.result}
+          bundle={state.bundle}
           meta={state.meta}
           theme={theme}
           onToggleTheme={toggleTheme}
@@ -43,6 +43,6 @@ export default function App() {
   }
 
   return (
-    <UploadScreen state={state} onFile={archive.loadFile} theme={theme} onToggleTheme={toggleTheme} />
+    <UploadScreen state={state} onFiles={archive.loadFiles} theme={theme} onToggleTheme={toggleTheme} />
   );
 }

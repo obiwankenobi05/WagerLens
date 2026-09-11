@@ -34,6 +34,13 @@ const REASON_COPY: Record<ExclusionReason, { title: string; body: string }> = {
     title: 'Invalid amounts',
     body: 'The stake or payout was missing, non-numeric or negative.',
   },
+  duplicate: {
+    title: 'Already counted',
+    body:
+      'The bet appeared in more than one uploaded file — from overlapping date ranges or the ' +
+      'same day downloaded twice. It is counted once, in the first file that contained it, so ' +
+      'no figure is inflated by a repeated export.',
+  },
 };
 
 /**

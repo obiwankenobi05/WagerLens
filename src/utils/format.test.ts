@@ -32,6 +32,21 @@ describe('makeAmountFormatter', () => {
     expect(format(1).split('.')[1].length).toBeLessThanOrEqual(8);
   });
 
+  it('caps precision once the largest figure is big, so cells do not overflow', () => {
+    // Converting to INR turns a 12.71 USDC total into ~46,132 while the
+    // smallest stake becomes 0.0096. Four decimals there is both unreadable
+    // and false precision.
+    const format = makeAmountFormatter([46132.5089, 19107.4055, -27025.1034, 0.0096]);
+    expect(format(46132.5089)).toBe('46,132.51');
+    expect(format(-27025.1034)).toBe('-27,025.10');
+    expect(format(46132.5089).split('.')[1].length).toBe(2);
+  });
+
+  it('still keeps fine precision when every figure is small', () => {
+    const format = makeAmountFormatter([12.71113603, 0.00010879]);
+    expect(format(12.71113603)).toBe('12.71114');
+  });
+
   it('handles an all-zero and an empty set without producing NaN', () => {
     expect(makeAmountFormatter([])(0)).toBe('0.00');
     expect(makeAmountFormatter([0, 0])(0)).toBe('0.00');

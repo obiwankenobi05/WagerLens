@@ -15,20 +15,41 @@ is uploaded.
 
 This is the part that matters most, so it comes first.
 
-- The file is read with the browser's `FileReader` API and parsed in memory.
-- **No network request is made with your data.** There is no backend, no
-  analytics script, no error reporting, and no third-party API.
-- Nothing is written to `localStorage` except your light/dark theme preference.
-  The archive itself is never persisted — reload the page and it is gone.
+- Files are read with the browser's `FileReader` API and parsed in memory.
+- **No network request is ever made with your betting data.** There is no
+  backend, no analytics script, and no error reporting.
+- **One exception, and it is opt-in:** if you turn on INR conversion, the app
+  fetches exchange rates. That request sends *currency codes only* — literally
+  the strings `usdc`, `usdt`, `inr`. No stake, payout, bet, timestamp or
+  identifier is included, and the request carries no cookies or credentials.
+  Leave conversion off and the app makes no outbound request at all.
+- `localStorage` holds your theme preference and, if you used conversion, the
+  cached rate table. The archive itself is never persisted — reload and it is
+  gone.
 - No web fonts are loaded. Typography uses system font stacks, so the page makes
   zero external requests once it has loaded.
 - The build is a static bundle. You can host it yourself, or run it offline.
 
-The one stored key is `wagerlens.theme`, holding `"light"` or `"dark"`.
+Stored keys: `wagerlens.theme` (`"light"` or `"dark"`) and, only after you
+enable conversion, `wagerlens.rates` (the fetched rate table and its
+timestamp).
 
 ---
 
 ## Features
+
+**Multi-file upload** — Stake exports one JSON per date, so drop the whole set
+at once. They merge into a single history, and a per-file panel reports each
+one on its own. Click any file to scope the entire dashboard to it.
+
+**De-duplication** — a bet appearing in two overlapping exports, or the same day
+downloaded twice, is counted once. Without this, re-downloading a date would
+silently inflate every figure on the page.
+
+**INR conversion** — optional. Converts every currency into INR at current
+rates so a mixed history becomes one comparable ledger, with the rate, its age
+and its source shown. A hand-entered rate is always available if the service is
+unreachable or you would rather use your own number.
 
 **Overview** — total wagered, total returned, net P&L, ROI, bet count, win rate,
 average and median stake, largest win and loss, maximum drawdown.
@@ -245,12 +266,34 @@ hard-coded ladder would put every bet in one bucket.
 
 ## Currency handling
 
-Amounts are shown in the currency recorded in the archive. **No currency is ever
-converted.**
+By default, amounts are shown in the currency recorded in the archive and
+**nothing is converted**. Where several currencies are present — commonly one
+file in INR and others in USDC or USDT — the dashboard reports one at a time and
+opens on whichever has the most bets. Figures from different currencies are
+never added together.
 
-If an archive contains several currencies, the header gains a currency selector
-and the whole dashboard reports one currency at a time. Figures from different
-currencies are never added together.
+### Optional INR conversion
+
+Turning on conversion multiplies every amount by a current exchange rate and
+combines the whole archive into one INR ledger. Rates come from CoinGecko
+(crypto) and open.er-api.com (fiat), are cached for 12 hours, and are shown in
+the currency panel with their age and source so any figure can be checked.
+
+Three things worth knowing:
+
+- **It converts at today's rate, not the rate at the time of each bet.** That
+  makes totals comparable across currencies, but a bet placed months ago is
+  being valued at today's price. The dashboard says so wherever conversion is
+  active.
+- **A currency with no rate is excluded, not assumed.** Leaving it in at face
+  value would mix denominations inside one total — precisely the error this app
+  refuses to make. Excluded bets are counted and reported.
+- **Conversion is a display layer.** The recorded amounts are never mutated;
+  switching it off restores them exactly.
+
+If the rate service is unreachable, blocked, or rate-limiting, the panel offers
+a manual rate per currency. That path is also the right one if you want to value
+your history at the rate you actually deposited at.
 
 Display precision is derived from both ends of the observed range — enough
 decimals that the largest total is not noisy, and enough that the smallest
@@ -268,7 +311,7 @@ src/
     games/       per-game panels
     ui/          primitives (Panel, Metric, DataTable, ThemeToggle, …)
   hooks/         archive state, theme, media queries, count-up
-  parsers/       raw Stake JSON → normalised model
+  parsers/       raw Stake JSON → normalised model, and multi-file merging
   styles/        design tokens and component classes
   test/          fixtures and factories
   types/         the internal data model
@@ -277,8 +320,9 @@ src/
 
 Three layers, in one direction:
 
-**Parser** → raw archive JSON becomes `BetRecord[]`. Raw shapes never escape
-`src/parsers/`.
+**Parser** → raw archive JSON becomes `BetRecord[]`, one file at a time, then
+`bundle.ts` merges the files and removes cross-file duplicates. Raw shapes never
+escape `src/parsers/`.
 
 **Analytics** → `BetRecord[]` becomes metrics. Every function is pure and takes
 an already-filtered, chronologically sorted array. No React, no DOM.
@@ -314,8 +358,9 @@ statistic.
 npm test
 ```
 
-98 tests covering the parser and the full analytics layer, run against a real
-sample archive plus synthetic fixtures.
+142 tests covering the parser, the multi-file merge, currency conversion,
+formatting and the full analytics layer, run against a real sample archive plus
+synthetic fixtures.
 
 The committed fixture (`src/test/fixtures/bet-archive.sample.json`) is a genuine
 export with the IP addresses and account identifiers replaced by placeholders.
@@ -332,6 +377,13 @@ asserts is unchanged. Coverage includes:
 - mixed, missing and malformed fields
 - multiple currencies being kept apart
 - no `NaN` or `Infinity` anywhere in any computed result
+- merging several daily exports into one history
+- de-duplicating a bet present in two overlapping files
+- a bad file not blocking the good ones in the same upload
+- currency conversion arithmetic, including profit staying exactly
+  `payout − stake` and multipliers surviving untouched
+- an unpriced currency being excluded rather than mixed in at face value
+- display precision adapting to both ends of a range without overflowing
 
 ---
 
@@ -340,8 +392,11 @@ asserts is unchanged. Coverage includes:
 - WagerLens reads what is in the file. It cannot see bets the export omits.
 - Bets still open at export time are excluded, so a dashboard built from an
   archive taken mid-session will not match an account balance.
-- There is no exchange-rate data, by design. Multi-currency archives are
-  reported separately and never summed.
+- Converted figures use one current rate for the whole history, so they are
+  today's value of past bets, not their value at the time. Leave conversion off
+  for the amounts exactly as recorded.
+- Rate lookups depend on a third-party service. If it is down or blocked, enter
+  a rate by hand.
 - The recorded probability field is reported as recorded. Its provenance is not
   something the archive establishes.
 - Per-game and per-band figures over small samples are descriptions of a handful

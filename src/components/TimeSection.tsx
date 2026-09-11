@@ -91,8 +91,8 @@ export function TimeSection({
       label="Time & cadence"
       note="All times are local to this device. Cells are shaded by number of bets; a corner mark flags a period that ended down."
     >
-      <div className="grid min-w-0 gap-5 lg:grid-cols-[260px_1fr]">
-        <dl className="flex min-w-0 flex-col lg:border-r lg:border-line lg:pr-4">
+      <div className="grid min-w-0 gap-5 lg:grid-cols-[240px_1fr] xl:grid-cols-[260px_1fr]">
+        <dl className="grid min-w-0 grid-cols-2 gap-x-4 sm:grid-cols-3 lg:grid-cols-1 lg:border-r lg:border-line lg:pr-4">
           <Stat label="First bet" value={formatDate(time.firstBet)} />
           <Stat label="Last bet" value={formatDate(time.lastBet)} />
           <Stat
