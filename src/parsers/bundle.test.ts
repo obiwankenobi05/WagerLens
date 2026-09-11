@@ -17,7 +17,7 @@ const file = (name: string, text: string, id = name): FileInput => ({
   text,
 });
 
-describe('parseArchiveBundle — merging daily exports', () => {
+describe('parseArchiveBundle: merging daily exports', () => {
   it('merges several files into one chronological history', () => {
     const day1 = archiveJson([
       rawBet({ id: 'a', amount: 10, payout: 25, createdAt: Date.UTC(2026, 1, 27, 10) }),
@@ -58,7 +58,7 @@ describe('parseArchiveBundle — merging daily exports', () => {
   });
 });
 
-describe('parseArchiveBundle — de-duplication', () => {
+describe('parseArchiveBundle: de-duplication', () => {
   it('counts a bet present in two overlapping exports only once', () => {
     const shared = rawBet({ id: 'overlap', amount: 10, payout: 30, createdAt: Date.UTC(2026, 1, 27, 23, 50) });
     const day1 = archiveJson([rawBet({ id: 'only-1', amount: 5, payout: 0 }), shared]);
@@ -102,7 +102,7 @@ describe('parseArchiveBundle — de-duplication', () => {
   });
 });
 
-describe('parseArchiveBundle — partial failure', () => {
+describe('parseArchiveBundle: partial failure', () => {
   it('keeps good files when one is unreadable', () => {
     const bundle = parseArchiveBundle([
       file('good.json', archiveJson([rawBet({ amount: 1, payout: 2 })])),
@@ -135,7 +135,7 @@ describe('parseArchiveBundle — partial failure', () => {
   });
 });
 
-describe('parseArchiveBundle — mixed currencies across files', () => {
+describe('parseArchiveBundle: mixed currencies across files', () => {
   const bundle = parseArchiveBundle([
     file('inr-day.json', archiveJson([
       rawBet({ id: 'i1', amount: 100, payout: 250, currency: 'inr' }),

@@ -26,7 +26,7 @@ export function useCountUp(target: number, durationMs = 520): number {
     const start = performance.now();
     const tick = (now: number) => {
       const t = Math.min(1, (now - start) / durationMs);
-      // easeOutcubic: fast settle, no overshoot — a readout, not a bounce.
+      // easeOutcubic: fast settle, no overshoot, a readout, not a bounce.
       const eased = 1 - (1 - t) ** 3;
       const next = from + (target - from) * eased;
       setValue(next);

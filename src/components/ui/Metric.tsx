@@ -12,7 +12,7 @@ interface MetricProps {
   format: (value: number) => string;
   /** Shown instead of the formatted value when the metric is undefined. */
   placeholder?: string;
-  /** Small line under the figure — a unit, a count, a qualifier. */
+  /** Small line under the figure, a unit, a count, a qualifier. */
   sub?: ReactNode;
   /** `auto` colours by sign; `accent` marks the single emphasised figure. */
   tone?: Tone;
@@ -32,7 +32,7 @@ export function Metric({
   label,
   value,
   format,
-  placeholder = '—',
+  placeholder = '-',
   sub,
   tone = 'neutral',
   emphasis = false,
@@ -44,8 +44,8 @@ export function Metric({
   const signed = tone === 'auto' && defined && value !== 0;
   const positive = signed && value > 0;
 
-  // When the glyph carries the sign, the number is formatted unsigned —
-  // otherwise a negative figure reads "▼ −4.67", stating the sign twice.
+  // When the glyph carries the sign, the number is formatted unsigned.
+  // Otherwise a negative figure reads "▼ −4.67", stating the sign twice.
   const display = defined ? format(signed ? Math.abs(animated) : animated) : placeholder;
 
   // The glyph is decorative, so a signed metric always needs the sign spelled

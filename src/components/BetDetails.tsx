@@ -51,7 +51,7 @@ export function BetDetails({
         />
         <Field label="Multiplier" value={formatMultiplier(bet.payoutMultiplier)} />
         <Field label="Outcome" value={bet.outcome} />
-        <Field label="Status" value={bet.status ?? '—'} />
+        <Field label="Status" value={bet.status ?? '-'} />
         <Field label="Placed on" value={bet.placedOnMobile ? 'Mobile' : 'Desktop'} />
         <Field label="Bet id" value={bet.betId} />
       </dl>
@@ -67,7 +67,7 @@ export function BetDetails({
               label="Combined recorded probability"
               value={
                 bet.sportsbook.combinedProbability === null
-                  ? '—'
+                  ? '-'
                   : formatPercent(bet.sportsbook.combinedProbability * 100, 2)
               }
             />
@@ -102,13 +102,13 @@ export function BetDetails({
                     <td className="tnum font-mono text-muted">{index + 1}</td>
                     <td className="tnum text-right font-mono">{formatMultiplier(leg.odds)}</td>
                     <td className="tnum text-right font-mono">
-                      {leg.probability === null ? '—' : formatPercent(leg.probability * 100, 2)}
+                      {leg.probability === null ? '-' : formatPercent(leg.probability * 100, 2)}
                     </td>
                     <td className="hidden max-w-[140px] truncate font-mono text-[10px] text-faint sm:table-cell">
-                      {leg.fixtureId ?? '—'}
+                      {leg.fixtureId ?? '-'}
                     </td>
                     <td className="hidden max-w-[140px] truncate font-mono text-[10px] text-faint lg:table-cell">
-                      {leg.marketId ?? '—'}
+                      {leg.marketId ?? '-'}
                     </td>
                     <td className="font-mono text-[11px]">{leg.cancelled ? 'Cancelled' : 'Active'}</td>
                   </tr>
@@ -124,9 +124,9 @@ export function BetDetails({
           <h4 className="wl-label-strong mb-2">Crash</h4>
           <dl className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
             <Field label="Cash-out target" value={formatMultiplier(bet.crash.cashoutAt)} />
-            <Field label="Result" value={bet.crash.result ?? '—'} />
+            <Field label="Result" value={bet.crash.result ?? '-'} />
             <Field label="Busted" value={bet.crash.busted ? 'Yes' : 'No'} />
-            <Field label="Round id" value={bet.crash.roundId ?? '—'} />
+            <Field label="Round id" value={bet.crash.roundId ?? '-'} />
           </dl>
         </div>
       )}
@@ -135,11 +135,11 @@ export function BetDetails({
         <div className="mt-4 border-t border-line pt-3">
           <h4 className="wl-label-strong mb-2">Plinko</h4>
           <dl className="mb-2 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
-            <Field label="Risk" value={bet.plinko.risk ?? '—'} />
-            <Field label="Rows" value={bet.plinko.rows ?? '—'} />
+            <Field label="Risk" value={bet.plinko.risk ?? '-'} />
+            <Field label="Rows" value={bet.plinko.rows ?? '-'} />
             <Field
               label="Landing point"
-              value={bet.plinko.point === null ? '—' : bet.plinko.point.toFixed(2)}
+              value={bet.plinko.point === null ? '-' : bet.plinko.point.toFixed(2)}
             />
             <Field label="Path length" value={bet.plinko.path.length} />
           </dl>
@@ -158,11 +158,11 @@ export function BetDetails({
         <div className="mt-4 border-t border-line pt-3">
           <h4 className="wl-label-strong mb-2">Mines</h4>
           <dl className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
-            <Field label="Mines" value={bet.mines.minesCount ?? '—'} />
+            <Field label="Mines" value={bet.mines.minesCount ?? '-'} />
             <Field label="Tiles revealed" value={bet.mines.selections} />
             <Field
               label="Mine positions"
-              value={bet.mines.minePositions.length > 0 ? bet.mines.minePositions.join(', ') : '—'}
+              value={bet.mines.minePositions.length > 0 ? bet.mines.minePositions.join(', ') : '-'}
             />
           </dl>
         </div>

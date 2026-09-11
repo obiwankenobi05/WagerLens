@@ -59,7 +59,7 @@ export function CurrencyControl({
   }, [open]);
 
   const converting = rates.enabled && rates.status === 'ready' && rates.table !== null;
-  const label = converting ? 'INR' : (currency ?? '—').toUpperCase();
+  const label = converting ? 'INR' : (currency ?? '-').toUpperCase();
 
   return (
     <div className="relative">
@@ -99,7 +99,7 @@ export function CurrencyControl({
           </header>
 
           <div className="p-3">
-            {/* Recorded currencies — always available, never converted. */}
+            {/* Recorded currencies, always available, never converted. */}
             <p className="wl-label mb-1.5">Show as recorded</p>
             <div className="flex flex-wrap gap-1.5">
               {currencies.map((entry) => (
@@ -124,7 +124,7 @@ export function CurrencyControl({
             </div>
             {currencies.length > 1 && !rates.enabled && (
               <p className="mt-2 text-[11px] leading-relaxed text-muted">
-                {currencies.length} currencies found. They are never added together — convert to
+                {currencies.length} currencies found. They are never added together. Convert to
                 INR below to see one combined total.
               </p>
             )}
@@ -164,7 +164,7 @@ export function CurrencyControl({
             <p className="mt-2 border-l-2 border-line py-1 pl-2.5 text-[11px] leading-relaxed text-muted">
               This is the only request WagerLens makes. It sends currency codes
               {' '}
-              <span className="text-ink">only</span> — no stakes, payouts, bets or identifiers. Your
+              <span className="text-ink">only</span>. No stakes, payouts, bets or identifiers. Your
               archive still never leaves this device.
             </p>
 

@@ -3,7 +3,7 @@
  *
  * Turns computed metrics into short descriptive sentences.
  *
- * LANGUAGE RULES — enforced by construction, not by review:
+ * LANGUAGE RULES: enforced by construction, not by review:
  *   - Every statement is an observation about the uploaded archive. Sentences
  *     are anchored with "In this archive", "Historically", "The data shows".
  *   - No advice, no recommendation, no forecast, no claim that a pattern will
@@ -48,15 +48,15 @@ interface ProfileInput {
 }
 
 const pct = (value: number | null, digits = 1): string => {
-  if (value === null || !Number.isFinite(value)) return '—';
+  if (value === null || !Number.isFinite(value)) return '-';
   // U+2212, matching every other figure in the interface rather than the
   // hyphen-minus toFixed produces.
   return `${value < 0 ? '−' : ''}${Math.abs(value).toFixed(digits)}%`;
 };
 
-/** "3 days", "5 hours", "12 minutes" — the largest sensible unit. */
+/** "3 days", "5 hours", "12 minutes", the largest sensible unit. */
 export function humaniseDuration(ms: number): string {
-  if (!Number.isFinite(ms) || ms < 0) return '—';
+  if (!Number.isFinite(ms) || ms < 0) return '-';
   const minutes = ms / 60_000;
   if (minutes < 1) return 'under a minute';
   if (minutes < 60) {
@@ -124,7 +124,7 @@ export function generateProfile(input: ProfileInput): ProfileInsight[] {
         ? `Across this archive the stakes and returns are exactly level at ${amount(overview.wagered)}.`
         : `Across this archive, ${amount(overview.wagered)} staked returned ${amount(
             overview.returned,
-          )} — a net ${down ? 'loss' : 'gain'} of ${amount(overview.netPnl)} at ${pct(overview.roi)} ROI.`,
+          )}. That is a net ${down ? 'loss' : 'gain'} of ${amount(overview.netPnl)} at ${pct(overview.roi)} ROI.`,
     highlight: overview.netPnl === 0 ? undefined : `${down ? '−' : '+'}${amount(overview.netPnl)}`,
   });
 
@@ -234,7 +234,7 @@ export function generateProfile(input: ProfileInput): ProfileInsight[] {
       text:
         `The typical stake is ${amount(overview.medianStake)} (mean ${amount(overview.averageStake)}), ` +
         `and the largest single stake is ${amount(overview.largestStake)}` +
-        (skew !== null && skew >= 2 ? ` — ${skew.toFixed(1)}× the median.` : '.'),
+        (skew !== null && skew >= 2 ? `, ${skew.toFixed(1)}× the median.` : '.'),
       highlight: amount(overview.medianStake),
     });
   }

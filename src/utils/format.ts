@@ -30,7 +30,7 @@ function decimalsForSignificance(value: number): number {
  * The most decimals worth showing at a given magnitude.
  *
  * Once the largest figure runs to five digits, a four-decimal tail is both
- * unreadable and false precision — the sub-rupee remainder of a ₹46,132 total
+ * unreadable and false precision, the sub-rupee remainder of a ₹46,132 total
  * carries no information. This caps what the small-value rule below can ask
  * for.
  */
@@ -78,12 +78,12 @@ export function makeAmountFormatter(values: number[]): (value: number) => string
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   });
-  return (value: number) => (Number.isFinite(value) ? nf.format(value) : '—');
+  return (value: number) => (Number.isFinite(value) ? nf.format(value) : '-');
 }
 
 /** One-off amount format when no shared scale is available. */
 export function formatAmount(value: number): string {
-  if (!Number.isFinite(value)) return '—';
+  if (!Number.isFinite(value)) return '-';
   const decimals = decimalsForScale(Math.abs(value));
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: decimals,
@@ -93,32 +93,32 @@ export function formatAmount(value: number): string {
 
 /** Amount with an explicit sign. Used wherever a figure is a delta. */
 export function formatSigned(value: number, format: (v: number) => string = formatAmount): string {
-  if (!Number.isFinite(value)) return '—';
+  if (!Number.isFinite(value)) return '-';
   if (value === 0) return format(0);
   return `${value > 0 ? '+' : '−'}${format(Math.abs(value))}`;
 }
 
 /** Percentage with a fixed precision. `null` renders as an em dash. */
 export function formatPercent(value: number | null, digits = 1): string {
-  if (value === null || !Number.isFinite(value)) return '—';
+  if (value === null || !Number.isFinite(value)) return '-';
   return `${value.toFixed(digits)}%`;
 }
 
 /** Signed percentage, for ROI and similar deltas. */
 export function formatSignedPercent(value: number | null, digits = 1): string {
-  if (value === null || !Number.isFinite(value)) return '—';
+  if (value === null || !Number.isFinite(value)) return '-';
   const sign = value > 0 ? '+' : value < 0 ? '−' : '';
   return `${sign}${Math.abs(value).toFixed(digits)}%`;
 }
 
 /** Integer with thousands separators. */
 export function formatCount(value: number): string {
-  return Number.isFinite(value) ? Math.round(value).toLocaleString('en-US') : '—';
+  return Number.isFinite(value) ? Math.round(value).toLocaleString('en-US') : '-';
 }
 
 /** Decimal multiplier, e.g. `2.00×`. */
 export function formatMultiplier(value: number | null | undefined, digits = 2): string {
-  if (value === null || value === undefined || !Number.isFinite(value)) return '—';
+  if (value === null || value === undefined || !Number.isFinite(value)) return '-';
   return `${value.toFixed(digits)}×`;
 }
 
@@ -144,24 +144,24 @@ const TIME_ONLY = new Intl.DateTimeFormat('en-GB', {
 });
 
 export function formatDateTime(date: Date | number | null): string {
-  if (date === null) return '—';
+  if (date === null) return '-';
   const d = typeof date === 'number' ? new Date(date) : date;
-  return Number.isNaN(d.getTime()) ? '—' : DATE_TIME.format(d);
+  return Number.isNaN(d.getTime()) ? '-' : DATE_TIME.format(d);
 }
 
 export function formatDate(date: Date | number | null): string {
-  if (date === null) return '—';
+  if (date === null) return '-';
   const d = typeof date === 'number' ? new Date(date) : date;
-  return Number.isNaN(d.getTime()) ? '—' : DATE_ONLY.format(d);
+  return Number.isNaN(d.getTime()) ? '-' : DATE_ONLY.format(d);
 }
 
 export function formatTime(date: Date | number | null): string {
-  if (date === null) return '—';
+  if (date === null) return '-';
   const d = typeof date === 'number' ? new Date(date) : date;
-  return Number.isNaN(d.getTime()) ? '—' : TIME_ONLY.format(d);
+  return Number.isNaN(d.getTime()) ? '-' : TIME_ONLY.format(d);
 }
 
-/** `2026-01-28` in local time — used for date-range inputs and period keys. */
+/** `2026-01-28` in local time, used for date-range inputs and period keys. */
 export function toDateInputValue(date: Date): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -177,9 +177,9 @@ export function fromDateInputValue(value: string): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-/** `1.2 MB`, `840 KB` — for the uploaded file's size. */
+/** `1.2 MB`, `840 KB`, for the uploaded file's size. */
 export function formatBytes(bytes: number): string {
-  if (!Number.isFinite(bytes) || bytes < 0) return '—';
+  if (!Number.isFinite(bytes) || bytes < 0) return '-';
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;

@@ -5,7 +5,7 @@ import { GroupStatsTable, RoiStrip } from '../GroupStatsTable';
 import type { MultiplierBin, PlinkoStats } from '@/analytics';
 import { formatCount, formatMultiplier, formatPercent } from '@/utils/format';
 
-/** Realised multiplier distribution — how often each payout band landed. */
+/** Realised multiplier distribution, how often each payout band landed. */
 function MultiplierDistribution({
   bins,
   formatAmount,
@@ -80,7 +80,7 @@ export function PlinkoSection({
             label="ROI"
             value={
               stats.roi === null ? (
-                '—'
+                '-'
               ) : (
                 <SignedValue value={stats.roi} format={(v) => `${v.toFixed(2)}%`} />
               )
@@ -96,7 +96,7 @@ export function PlinkoSection({
           <Stat label="Highest multiplier" value={formatMultiplier(stats.highestMultiplier)} />
           <Stat
             label="Average stake"
-            value={stats.averageStake === null ? '—' : `${formatAmount(stats.averageStake)} ${code}`}
+            value={stats.averageStake === null ? '-' : `${formatAmount(stats.averageStake)} ${code}`}
           />
           <Stat
             label="Largest win"

@@ -102,22 +102,22 @@ export function TimeSection({
           <Stat label="Active days" value={formatCount(time.activeDays)} />
           <Stat
             label="Bets per active day"
-            value={time.betsPerActiveDay === null ? '—' : time.betsPerActiveDay.toFixed(1)}
+            value={time.betsPerActiveDay === null ? '-' : time.betsPerActiveDay.toFixed(1)}
           />
           <Stat
             label="Median gap"
-            value={time.medianGapMs === null ? '—' : humaniseDuration(time.medianGapMs)}
+            value={time.medianGapMs === null ? '-' : humaniseDuration(time.medianGapMs)}
             title="Typical time between consecutive bets"
           />
           <Stat
             label="Average gap"
-            value={time.averageGapMs === null ? '—' : humaniseDuration(time.averageGapMs)}
+            value={time.averageGapMs === null ? '-' : humaniseDuration(time.averageGapMs)}
           />
           <Stat
             label="Most active hour"
             value={
               time.mostActiveHour === null
-                ? '—'
+                ? '-'
                 : `${String(time.mostActiveHour.hour).padStart(2, '0')}:00 · ${time.mostActiveHour.bets} bets`
             }
           />
@@ -125,7 +125,7 @@ export function TimeSection({
             label="Most active day"
             value={
               time.mostActiveWeekday === null
-                ? '—'
+                ? '-'
                 : `${time.mostActiveWeekday.weekday} · ${time.mostActiveWeekday.bets}`
             }
           />

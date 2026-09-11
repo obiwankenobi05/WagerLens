@@ -19,7 +19,7 @@ export function resolveInitialTheme(): Theme {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored === 'light' || stored === 'dark') return stored;
   } catch {
-    // Private browsing or blocked storage — fall through to the system value.
+    // Private browsing or blocked storage, fall through to the system value.
   }
   return window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 }

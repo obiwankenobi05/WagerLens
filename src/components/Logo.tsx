@@ -20,12 +20,36 @@ export function Logo({ size = 22, className }: { size?: number; className?: stri
   );
 }
 
-/** Wordmark plus mark, used in the header and on the upload screen. */
+/** Wordmark plus mark, used on the upload screen where there is nowhere to go. */
 export function Wordmark({ size = 22 }: { size?: number }) {
   return (
     <span className="flex items-center gap-2.5">
       <Logo size={size} />
       <span className="font-mono text-sm uppercase tracking-[0.2em] text-ink">WagerLens</span>
     </span>
+  );
+}
+
+/**
+ * The header wordmark, which returns to the upload screen.
+ *
+ * A logo that goes home is the convention users already expect, so it replaces
+ * the separate reset button rather than sitting beside it. Nothing is lost that
+ * cannot be restored by dropping the same files again, and the archive was
+ * never persisted in the first place.
+ */
+export function WordmarkButton({ size = 20, onClick }: { size?: number; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title="Back to upload"
+      aria-label="WagerLens, back to the upload screen"
+      className="group flex min-h-[34px] shrink-0 items-center gap-2.5 transition-opacity duration-200
+                 ease-instrument hover:opacity-70 active:scale-[0.98]"
+    >
+      <Logo size={size} />
+      <span className="font-mono text-sm uppercase tracking-[0.2em] text-ink">WagerLens</span>
+    </button>
   );
 }

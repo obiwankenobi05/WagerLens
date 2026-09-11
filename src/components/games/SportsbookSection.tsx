@@ -11,7 +11,7 @@ import { formatCount, formatMultiplier, formatPercent } from '@/utils/format';
  *
  * The probability column is the archive's own `probabilities` field, reported
  * as recorded. WagerLens does not claim how it was produced, and a band with
- * few bets says very little — the sample column is shown alongside for exactly
+ * few bets says very little, the sample column is shown alongside for exactly
  * that reason.
  */
 function CalibrationTable({ rows }: { rows: CalibrationRow[] }) {
@@ -63,7 +63,7 @@ function CalibrationTable({ rows }: { rows: CalibrationRow[] }) {
       title: 'Actual win rate minus mean recorded probability, in percentage points',
       render: (row) =>
         row.actualWinRate === null ? (
-          <span className="text-faint">—</span>
+          <span className="text-faint">-</span>
         ) : (
           <SignedValue
             value={row.actualWinRate - row.recordedProbability}
@@ -78,7 +78,7 @@ function CalibrationTable({ rows }: { rows: CalibrationRow[] }) {
       sortValue: (row) => row.roi ?? Number.NEGATIVE_INFINITY,
       render: (row) =>
         row.roi === null ? (
-          <span className="text-faint">—</span>
+          <span className="text-faint">-</span>
         ) : (
           <SignedValue value={row.roi} format={(v) => `${v.toFixed(1)}%`} />
         ),
@@ -128,7 +128,7 @@ export function SportsbookSection({
             label="ROI"
             value={
               stats.roi === null ? (
-                '—'
+                '-'
               ) : (
                 <SignedValue value={stats.roi} format={(v) => `${v.toFixed(2)}%`} />
               )
@@ -138,7 +138,7 @@ export function SportsbookSection({
           <Stat
             label="Average odds"
             value={formatMultiplier(stats.averageOdds)}
-            title="Mean of the potential multiplier — the product of the leg odds"
+            title="Mean of the potential multiplier, the product of the leg odds"
           />
           <Stat
             label="Stake-weighted odds"
@@ -207,7 +207,7 @@ export function SportsbookSection({
                 <p className="mb-2 max-w-[70ch] text-[11px] leading-relaxed text-muted">
                   The archive stores a probability alongside each selection. This table reports that
                   field exactly as recorded and sets it next to what actually happened. Bands with
-                  few bets will differ from the recorded figure through sample size alone — read the
+                  few bets will differ from the recorded figure through sample size alone. Read the
                   bets column before the difference column.
                 </p>
                 <CalibrationTable rows={stats.calibration} />

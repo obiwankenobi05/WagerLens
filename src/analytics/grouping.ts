@@ -28,7 +28,7 @@ export interface GroupStats {
   averageStake: number | null;
   largestWin: number;
   largestLoss: number;
-  /** Share of the group's wagered volume against the whole set, 0–100. */
+  /** Share of the group's wagered volume against the whole set, 0 to 100. */
   shareOfWagered: number;
 }
 
@@ -137,17 +137,17 @@ export interface Bucket {
 /** Default decimal-odds bands for sportsbook analysis. */
 export const DEFAULT_ODDS_BUCKETS: Bucket[] = [
   { key: 'lt150', label: '< 1.50', min: 0, max: 1.5 },
-  { key: '150-200', label: '1.50 – 2.00', min: 1.5, max: 2 },
-  { key: '200-300', label: '2.00 – 3.00', min: 2, max: 3 },
+  { key: '150-200', label: '1.50 - 2.00', min: 1.5, max: 2 },
+  { key: '200-300', label: '2.00 - 3.00', min: 2, max: 3 },
   { key: 'gte300', label: '3.00+', min: 3, max: null },
 ];
 
 /** Recorded-probability bands, from long shot to heavy favourite. */
 export const DEFAULT_PROBABILITY_BUCKETS: Bucket[] = [
-  { key: 'p0-25', label: '0 – 25%', min: 0, max: 0.25 },
-  { key: 'p25-50', label: '25 – 50%', min: 0.25, max: 0.5 },
-  { key: 'p50-75', label: '50 – 75%', min: 0.5, max: 0.75 },
-  { key: 'p75-100', label: '75 – 100%', min: 0.75, max: null },
+  { key: 'p0-25', label: '0 - 25%', min: 0, max: 0.25 },
+  { key: 'p25-50', label: '25 - 50%', min: 0.25, max: 0.5 },
+  { key: 'p50-75', label: '50 - 75%', min: 0.5, max: 0.75 },
+  { key: 'p75-100', label: '75 - 100%', min: 0.75, max: null },
 ];
 
 /** Finds the bucket a value falls in, or `null` when it fits none. */
@@ -161,7 +161,7 @@ export function bucketFor(value: number, buckets: Bucket[]): Bucket | null {
 /**
  * Groups sportsbook bets by the multiplier they would have paid at.
  *
- * Uses `potentialMultiplier` — the product of the leg odds — so a multi is
+ * Uses `potentialMultiplier` (the product of the leg odds) so a multi is
  * bucketed by what it actually paid at, not by an arbitrary single leg.
  */
 export function groupByOddsRange(
@@ -226,7 +226,7 @@ export function buildStakeBuckets(bets: BetRecord[]): Bucket[] {
   for (let i = 0; i < cuts.length; i += 1) {
     buckets.push({
       key: `q${i}`,
-      label: i === 0 ? `≤ ${fmt(cuts[i])}` : `${fmt(lower)} – ${fmt(cuts[i])}`,
+      label: i === 0 ? `≤ ${fmt(cuts[i])}` : `${fmt(lower)} - ${fmt(cuts[i])}`,
       min: lower,
       max: cuts[i],
     });
@@ -282,7 +282,7 @@ export interface PeriodStats extends GroupStats {
 
 /**
  * Buckets bets into calendar periods and carries a running cumulative P&L.
- * Periods with no activity are not synthesised — gaps are real information.
+ * Periods with no activity are not synthesised, gaps are real information.
  */
 export function groupByDate(bets: BetRecord[], bucket: TimeBucket = 'day'): PeriodStats[] {
   const groups = new Map<string, { acc: Accumulator; start: number }>();
@@ -312,7 +312,7 @@ export function groupByDate(bets: BetRecord[], bucket: TimeBucket = 'day'): Peri
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-/** Activity and P&L by hour of day (local time), 0–23. Always 24 rows. */
+/** Activity and P&L by hour of day (local time), 0 to 23. Always 24 rows. */
 export function groupByHour(bets: BetRecord[]): GroupStats[] {
   const rows = groupBy(
     bets,

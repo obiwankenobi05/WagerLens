@@ -22,7 +22,7 @@ export function ThemeToggle({ theme, onToggle }: { theme: Theme; onToggle: () =>
       onClick={onToggle}
       className="group relative flex h-8 w-[54px] shrink-0 items-center border border-line bg-surface
                  transition-colors duration-200 hover:border-line-strong sm:h-7 sm:w-[52px]"
-      title={`${isDark ? 'Dark' : 'Light'} — click to switch`}
+      title={`${isDark ? 'Dark' : 'Light'}, click to switch`}
     >
       {/* Travelling block. 2px inset keeps the hairline visible on both sides. */}
       <span

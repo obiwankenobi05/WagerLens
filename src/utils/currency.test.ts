@@ -161,10 +161,10 @@ describe('rate table helpers', () => {
 
 describe('presentation helpers', () => {
   it('formats INR with the rupee symbol and Indian grouping', () => {
-    // 12,34,567.89 — lakh/crore grouping, not thousands.
+    // 12,34,567.89, lakh/crore grouping, not thousands.
     expect(formatInr(1234567.89)).toBe('₹12,34,567.89');
     expect(formatInr(1000)).toBe('₹1,000.00');
-    expect(formatInr(Number.NaN)).toBe('—');
+    expect(formatInr(Number.NaN)).toBe('-');
   });
 
   it('describes rate freshness in plain words', () => {

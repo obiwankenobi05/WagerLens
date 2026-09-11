@@ -100,7 +100,7 @@ export function DrawdownSection({
           />
           <Stat
             label="Recovery time"
-            value={drawdown.recoveryMs === null ? '—' : humaniseDuration(drawdown.recoveryMs)}
+            value={drawdown.recoveryMs === null ? '-' : humaniseDuration(drawdown.recoveryMs)}
           />
           <Stat
             label="Current drawdown"
@@ -132,7 +132,7 @@ function RunStrip({ runs }: { runs: StreakStats['runs'] }) {
             key={`${run.startedAt.getTime()}-${index}`}
             className={cx('min-w-px transition-opacity duration-300', run.type === 'win' ? 'bg-pos' : 'bg-neg/70')}
             style={{ flex: `${run.length} 1 0%` }}
-            title={`${run.length} ${run.type === 'win' ? 'win' : 'loss'}${run.length === 1 ? '' : 'es'} — ${formatDateTime(run.startedAt)}`}
+            title={`${run.length} ${run.type === 'win' ? 'win' : 'loss'}${run.length === 1 ? '' : 'es'}, ${formatDateTime(run.startedAt)}`}
           />
         ))}
       </div>
@@ -156,7 +156,7 @@ export function StreakSection({ streaks }: { streaks: StreakStats }) {
     <Panel
       index="05"
       label="Streaks"
-      note="Consecutive runs of wins and losses. Break-even bets neither extend nor break a run. Runs describe the order results happened in — they carry no information about what comes next."
+      note="Consecutive runs of wins and losses. Break-even bets neither extend nor break a run. Runs describe the order results happened in. They carry no information about what comes next."
     >
       <div className="grid min-w-0 gap-4 sm:grid-cols-2">
         <dl className="flex min-w-0 flex-col">
@@ -178,14 +178,14 @@ export function StreakSection({ streaks }: { streaks: StreakStats }) {
           <Stat
             label="Average winning run"
             value={
-              streaks.averageWinStreak === null ? '—' : `${streaks.averageWinStreak.toFixed(2)} bets`
+              streaks.averageWinStreak === null ? '-' : `${streaks.averageWinStreak.toFixed(2)} bets`
             }
           />
           <Stat
             label="Average losing run"
             value={
               streaks.averageLossStreak === null
-                ? '—'
+                ? '-'
                 : `${streaks.averageLossStreak.toFixed(2)} bets`
             }
           />

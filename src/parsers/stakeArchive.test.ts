@@ -10,7 +10,7 @@ const SAMPLE = readFileSync(
   'utf8',
 );
 
-describe('parseStakeArchive — reference archive', () => {
+describe('parseStakeArchive: reference archive', () => {
   const result = parseStakeArchive(SAMPLE);
 
   it('reads every record in the file', () => {
@@ -110,7 +110,7 @@ describe('parseStakeArchive — reference archive', () => {
   });
 });
 
-describe('parseStakeArchive — malformed input', () => {
+describe('parseStakeArchive: malformed input', () => {
   it('rejects non-JSON', () => {
     expect(() => parseStakeArchive('not json at all')).toThrow(ArchiveParseError);
     expect(() => parseStakeArchive('not json at all')).toThrow(/isn't valid JSON/);

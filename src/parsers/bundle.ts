@@ -47,7 +47,7 @@ const identityOf = (bet: BetRecord): string => bet.betId || bet.id;
  * Parses and merges many archive files.
  *
  * Files are processed in the order given. A file that fails to parse does not
- * stop the others — it lands in `failed` with its error, so one bad download
+ * stop the others, it lands in `failed` with its error, so one bad download
  * never blocks the rest of a history.
  */
 export function parseArchiveBundle(inputs: FileInput[]): ArchiveBundle {
@@ -168,7 +168,7 @@ export function parseArchiveBundle(inputs: FileInput[]): ArchiveBundle {
   }
   if (duplicatesRemoved > 0) {
     notes.unshift(
-      `${duplicatesRemoved} bet(s) appeared in more than one file — from overlapping date ranges or a repeated download — and were counted once.`,
+      `${duplicatesRemoved} bet(s) appeared in more than one file (from overlapping date ranges or a repeated download) and were counted once.`,
     );
   }
   if (failed.length > 0) {

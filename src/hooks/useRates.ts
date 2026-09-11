@@ -3,7 +3,7 @@
  *
  * Conversion is opt-in and starts off, so the default experience makes no
  * network request at all. Turning it on fetches rates for the currency codes
- * present in the archive and nothing more — see the note at the top of
+ * present in the archive and nothing more, see the note at the top of
  * `src/utils/currency.ts` for exactly what leaves the device.
  */
 

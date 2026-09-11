@@ -83,9 +83,9 @@ export interface CalibrationRow {
   key: string;
   label: string;
   bets: number;
-  /** Mean of the recorded probability field for bets in this band, 0–100. */
+  /** Mean of the recorded probability field for bets in this band, 0 to 100. */
   recordedProbability: number;
-  /** Share of decided bets in this band that won, 0–100. `null` if none decided. */
+  /** Share of decided bets in this band that won, 0 to 100. `null` if none decided. */
   actualWinRate: number | null;
   wins: number;
   losses: number;
@@ -105,7 +105,7 @@ export interface SportsbookStats extends GameSummary {
   /** Stake-weighted mean of the potential multiplier. */
   weightedAverageOdds: number | null;
   highestOdds: number | null;
-  /** Mean of the archive's recorded probability field, 0–1. */
+  /** Mean of the archive's recorded probability field, 0 to 1. */
   averageRecordedProbability: number | null;
   cashouts: number;
   distinctFixtures: number;
@@ -120,7 +120,7 @@ export interface SportsbookStats extends GameSummary {
  * multi is classified by what it would actually have paid.
  *
  * The calibration table compares the archive's own recorded probability field
- * against realised win rates. That field is reported exactly as recorded —
+ * against realised win rates. That field is reported exactly as recorded.
  * WagerLens makes no claim about how Stake produced it, and small samples in a
  * band make the comparison indicative at best.
  */
@@ -243,7 +243,7 @@ export interface CrashStats extends GameSummary {
  * Crash analytics.
  *
  * Cash-out targets are taken from the values actually present in the archive,
- * not from a fixed ladder — a player who only ever sets 2.00x should see one
+ * not from a fixed ladder, a player who only ever sets 2.00x should see one
  * row, not five mostly-empty ones.
  *
  * A round "succeeds" when it returned more than its stake. That covers both a
@@ -321,7 +321,7 @@ export function calculateCrashStats(allBets: BetRecord[]): CrashStats {
 export interface MultiplierBin {
   multiplier: number;
   count: number;
-  /** Share of all drops, 0–100. */
+  /** Share of all drops, 0 to 100. */
   share: number;
   netPnl: number;
 }
@@ -333,7 +333,7 @@ export interface PlinkoStats extends GameSummary {
   highestMultiplier: number | null;
   /** Distribution of realised multipliers, highest first. */
   multiplierDistribution: MultiplierBin[];
-  /** Share of drops that returned less than the stake, 0–100. */
+  /** Share of drops that returned less than the stake, 0 to 100. */
   belowStakeRate: number | null;
 }
 
@@ -412,7 +412,7 @@ export interface MinesStats extends GameSummary {
  * Mines analytics.
  *
  * "Selections" is the number of safe tiles revealed, read from the length of
- * the recorded `rounds` array. A round with no payout is treated as busted —
+ * the recorded `rounds` array. A round with no payout is treated as busted:
  * the archive records the revealed tiles but not an explicit bust flag.
  */
 export function calculateMinesStats(allBets: BetRecord[]): MinesStats {

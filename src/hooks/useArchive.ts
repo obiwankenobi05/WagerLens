@@ -2,7 +2,7 @@
  * Archive loading, filtering and derived analytics.
  *
  * Parsing happens in this module and nowhere else. Files are read with the
- * FileReader API and parsed in memory — no network request is ever made with
+ * FileReader API and parsed in memory, no network request is ever made with
  * their contents. (The optional INR conversion does make one request, for
  * currency rates only; see `src/utils/currency.ts`.)
  */
@@ -247,7 +247,7 @@ export function useArchive() {
 
       setFilters(EMPTY_FILTERS);
       // Open on the currency the history is actually denominated in, not the
-      // alphabetically first one — a few INR bets alongside hundreds in USDC
+      // alphabetically first one, a few INR bets alongside hundreds in USDC
       // should not decide the default view.
       const counts = new Map<string, number>();
       for (const bet of parsed.bets) counts.set(bet.currency, (counts.get(bet.currency) ?? 0) + 1);
@@ -285,7 +285,7 @@ export function useArchive() {
    *
    * With conversion on, every currency is rewritten into INR and the whole
    * archive becomes one ledger. With it off, exactly one recorded currency is
-   * shown at a time — denominations are never mixed.
+   * shown at a time, denominations are never mixed.
    */
   const { currencyBets, unconvertible } = useMemo(() => {
     if (!bundle) return { currencyBets: [] as BetRecord[], unconvertible: [] as BetRecord[] };

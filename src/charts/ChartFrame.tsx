@@ -23,7 +23,7 @@ export function ChartFrame({
   );
 }
 
-/** Tooltip shell — a hairline box matching the panel language. */
+/** Tooltip shell, a hairline box matching the panel language. */
 export function TooltipBox({ title, rows }: { title: string; rows: Array<[string, ReactNode]> }) {
   return (
     <div className="border border-line-strong bg-raised px-2.5 py-2 shadow-sm">
@@ -101,9 +101,9 @@ export function makeAxisFormatter(values: number[]): (value: number) => string {
 /**
  * Evenly spaced tick positions across a time domain.
  *
- * Left to itself, Recharts emits a tick per data point when timestamps cluster
- * — an archive with many bets in the same minute, or several files whose
- * ranges coincide — and `minTickGap` does not cull them because they sit at
+ * Left to itself, Recharts emits a tick per data point when timestamps cluster,
+ * such as an archive with many bets in the same minute or several files whose
+ * ranges coincide, and `minTickGap` does not cull them because they sit at
  * nearly the same pixel. Supplying the ticks makes the axis independent of how
  * the data happens to be distributed.
  */
@@ -119,7 +119,7 @@ export function evenTimeTicks(min: number, max: number, count = 6): number[] {
  * Advance width of one character in the axis font, in pixels.
  *
  * Measured from the rendered SVG rather than assumed: the axis text is 10px
- * but the fallback monospace face renders at ~9.8–10.2px per glyph. Estimating
+ * but the fallback monospace face renders at ~9.8 to 10.2px per glyph. Estimating
  * this too low silently clips the leading minus sign off negative labels.
  */
 const AXIS_CHAR_PX = 10;

@@ -31,7 +31,7 @@ export function MinesSection({
       actions={<span className="wl-meta">{formatCount(stats.bets)} rounds</span>}
       note={
         stats.bets < 10
-          ? `Only ${stats.bets} Mines rounds in this selection — the figures below describe those rounds and little more.`
+          ? `Only ${stats.bets} Mines rounds in this selection. The figures below describe those rounds and little more.`
           : undefined
       }
     >
@@ -43,7 +43,7 @@ export function MinesSection({
             label="ROI"
             value={
               stats.roi === null ? (
-                '—'
+                '-'
               ) : (
                 <SignedValue value={stats.roi} format={(v) => `${v.toFixed(2)}%`} />
               )
@@ -55,10 +55,10 @@ export function MinesSection({
             value={`${formatCount(stats.bustedRounds)} of ${formatCount(stats.bets)}`}
             title="Rounds that returned nothing"
           />
-          <Stat label="Average mines" value={stats.averageMineCount?.toFixed(2) ?? '—'} />
+          <Stat label="Average mines" value={stats.averageMineCount?.toFixed(2) ?? '-'} />
           <Stat
             label="Average tiles revealed"
-            value={stats.averageSelections?.toFixed(2) ?? '—'}
+            value={stats.averageSelections?.toFixed(2) ?? '-'}
             title="Mean number of safe tiles opened per round"
           />
           <Stat

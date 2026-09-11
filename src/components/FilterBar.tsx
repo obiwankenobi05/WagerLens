@@ -42,7 +42,7 @@ function Chip({
  * Global dashboard filters.
  *
  * Every control narrows the same bet array, and every metric on the page is
- * recomputed from it — there is no separate "filtered" pipeline that could
+ * recomputed from it, there is no separate "filtered" pipeline that could
  * drift from the headline figures.
  *
  * On phones the controls collapse behind a single button, because a permanently

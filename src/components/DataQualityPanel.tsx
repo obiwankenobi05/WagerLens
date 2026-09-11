@@ -37,7 +37,7 @@ const REASON_COPY: Record<ExclusionReason, { title: string; body: string }> = {
   duplicate: {
     title: 'Already counted',
     body:
-      'The bet appeared in more than one uploaded file — from overlapping date ranges or the ' +
+      'The bet appeared in more than one uploaded file, either from overlapping date ranges or the ' +
       'same day downloaded twice. It is counted once, in the first file that contained it, so ' +
       'no figure is inflated by a repeated export.',
   },
@@ -114,7 +114,7 @@ export function DataQualityPanel({
 
           <p className="mt-3 text-[11px] leading-relaxed text-muted">
             Parsed in {parseMs.toFixed(0)} ms, entirely in this browser. Excluded records are left
-            out of every figure on the dashboard — they are listed here so the totals can be
+            out of every figure on the dashboard. They are listed here so the totals can be
             reconciled against the original file.
           </p>
 
@@ -161,13 +161,13 @@ export function DataQualityPanel({
             <div>
               <h3 className="wl-label mb-1.5">Games found</h3>
               <p className="font-mono text-[11px] text-ink">
-                {quality.games.length > 0 ? quality.games.join(', ') : '—'}
+                {quality.games.length > 0 ? quality.games.join(', ') : '-'}
               </p>
             </div>
             <div>
               <h3 className="wl-label mb-1.5">Currencies found</h3>
               <p className="font-mono text-[11px] uppercase text-ink">
-                {quality.currencies.length > 0 ? quality.currencies.join(', ') : '—'}
+                {quality.currencies.length > 0 ? quality.currencies.join(', ') : '-'}
               </p>
             </div>
           </div>

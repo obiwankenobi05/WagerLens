@@ -153,7 +153,7 @@
     @apply font-mono text-3xs uppercase tracking-[0.12em] text-faint;
   }
 
-  /* Registration tick — a small instrument marker used beside headings. */
+  /* Registration tick, a small instrument marker used beside headings. */
   .wl-tick::before {
     content: '';
     @apply mr-2 inline-block h-[7px] w-[7px] border border-line-strong align-middle;
@@ -252,7 +252,7 @@
     @apply h-px w-full bg-line;
   }
 
-  /* Perforated grid backdrop — the instrument-panel texture. */
+  /* Perforated grid backdrop, the instrument-panel texture. */
   .wl-grid-bg {
     background-image: radial-gradient(rgb(var(--wl-grid) / 0.14) 0.5px, transparent 0.5px);
     background-size: 4px 4px;
@@ -277,7 +277,7 @@
       transform 220ms cubic-bezier(0.2, 0.9, 0.25, 1);
   }
 
-  /* Panels lift very slightly under the pointer — enough to feel responsive,
+  /* Panels lift very slightly under the pointer, enough to feel responsive,
      not enough to move the grid. */
   .wl-panel {
     transition:

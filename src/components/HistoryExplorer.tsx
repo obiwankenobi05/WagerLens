@@ -41,7 +41,7 @@ const COLUMNS: Array<{
     align: 'right',
     sortable: true,
     hideOnMobile: true,
-    title: 'Realised payout multiplier — payout divided by stake',
+    title: 'Realised payout multiplier: payout divided by stake',
   },
   { key: 'status', header: 'Result', hideOnMobile: true },
   { key: 'expand', header: '' },
@@ -278,7 +278,7 @@ export function HistoryExplorer({
           aria-label="Bet history pagination"
         >
           <p className="wl-meta" role="status" aria-live="polite">
-            {formatCount(start)}–{formatCount(end)} of {formatCount(sorted.length)} · {code}
+            {formatCount(start)}-{formatCount(end)} of {formatCount(sorted.length)} · {code}
           </p>
           <div className="flex items-center gap-2">
             <button

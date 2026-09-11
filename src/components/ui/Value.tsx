@@ -17,7 +17,7 @@ export function SignedValue({
   className?: string;
   showSign?: boolean;
 }) {
-  if (!Number.isFinite(value)) return <span className={cx('tnum text-faint', className)}>—</span>;
+  if (!Number.isFinite(value)) return <span className={cx('tnum text-faint', className)}>-</span>;
 
   const positive = value > 0;
   const negative = value < 0;

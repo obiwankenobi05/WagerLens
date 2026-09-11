@@ -50,8 +50,8 @@ describe('makeAmountFormatter', () => {
   it('handles an all-zero and an empty set without producing NaN', () => {
     expect(makeAmountFormatter([])(0)).toBe('0.00');
     expect(makeAmountFormatter([0, 0])(0)).toBe('0.00');
-    expect(makeAmountFormatter([1])(Number.NaN)).toBe('—');
-    expect(makeAmountFormatter([1])(Number.POSITIVE_INFINITY)).toBe('—');
+    expect(makeAmountFormatter([1])(Number.NaN)).toBe('-');
+    expect(makeAmountFormatter([1])(Number.POSITIVE_INFINITY)).toBe('-');
   });
 });
 
@@ -63,13 +63,13 @@ describe('scalar formatters', () => {
   });
 
   it('renders null and non-finite values as an em dash rather than NaN', () => {
-    expect(formatPercent(null)).toBe('—');
-    expect(formatSignedPercent(null)).toBe('—');
-    expect(formatMultiplier(null)).toBe('—');
-    expect(formatMultiplier(undefined)).toBe('—');
-    expect(formatPercent(Number.NaN)).toBe('—');
-    expect(formatAmount(Number.POSITIVE_INFINITY)).toBe('—');
-    expect(formatCount(Number.NaN)).toBe('—');
+    expect(formatPercent(null)).toBe('-');
+    expect(formatSignedPercent(null)).toBe('-');
+    expect(formatMultiplier(null)).toBe('-');
+    expect(formatMultiplier(undefined)).toBe('-');
+    expect(formatPercent(Number.NaN)).toBe('-');
+    expect(formatAmount(Number.POSITIVE_INFINITY)).toBe('-');
+    expect(formatCount(Number.NaN)).toBe('-');
   });
 
   it('formats percentages and multipliers', () => {

@@ -88,7 +88,7 @@ function TargetTable({
       sortValue: (row) => row.roi ?? Number.NEGATIVE_INFINITY,
       render: (row) =>
         row.roi === null ? (
-          <span className="text-faint">—</span>
+          <span className="text-faint">-</span>
         ) : (
           <SignedValue value={row.roi} format={(v) => `${v.toFixed(1)}%`} />
         ),
@@ -139,7 +139,7 @@ export function CrashSection({
             label="ROI"
             value={
               stats.roi === null ? (
-                '—'
+                '-'
               ) : (
                 <SignedValue value={stats.roi} format={(v) => `${v.toFixed(2)}%`} />
               )

@@ -1,4 +1,4 @@
-/** A segmented control — the dashboard's standard mode switch. */
+/** A segmented control, the dashboard's standard mode switch. */
 export function Segmented<T extends string>({
   options,
   value,

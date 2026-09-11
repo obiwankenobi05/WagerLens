@@ -40,10 +40,10 @@ function Methodology({ currency, converted }: { currency: string; converted: boo
                 ['Total Wagered', 'Sum of the stake on every completed bet.'],
                 [
                   'Total Returned',
-                  'Sum of the payout on those same bets. Payout is gross — it already includes the stake back on a winner.',
+                  'Sum of the payout on those same bets. Payout is gross, so it already includes the stake back on a winner.',
                 ],
                 ['Net P&L', 'Total Returned − Total Wagered. The realised change in balance.'],
-                ['ROI', 'Net P&L ÷ Total Wagered × 100. Shown as “—” when nothing was wagered.'],
+                ['ROI', 'Net P&L ÷ Total Wagered × 100. Shown as a dash when nothing was wagered.'],
                 [
                   'Win rate',
                   'Bets that returned more than their stake, as a share of bets that were decided. Exact break-even rounds are pushes and sit outside both sides.',
@@ -185,7 +185,7 @@ export function OverviewSection({
             label="Average bet"
             value={overview.averageStake ?? undefined}
             format={amount}
-            sub={`median ${overview.medianStake === null ? '—' : formatAmount(overview.medianStake)}`}
+            sub={`median ${overview.medianStake === null ? '-' : formatAmount(overview.medianStake)}`}
           />,
           <Metric
             key="win"

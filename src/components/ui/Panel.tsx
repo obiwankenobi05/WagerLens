@@ -8,7 +8,7 @@ interface PanelProps {
   index?: string;
   /** Right-aligned controls on the rail. */
   actions?: ReactNode;
-  /** Small note under the rail — usually a definition or a caveat. */
+  /** Small note under the rail, usually a definition or a caveat. */
   note?: ReactNode;
   children: ReactNode;
   className?: string;

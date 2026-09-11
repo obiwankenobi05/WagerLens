@@ -50,7 +50,7 @@ import {
 /** Games with a dedicated analytics view. Anything else still parses fine. */
 const KNOWN_GAMES = new Set(['sportsbook', 'crash', 'plinko', 'mines']);
 
-/** Reasonable bounds for a bet timestamp — guards against unit confusion. */
+/** Reasonable bounds for a bet timestamp, guards against unit confusion. */
 const MIN_TIMESTAMP = Date.UTC(2000, 0, 1);
 const MAX_TIMESTAMP = Date.UTC(2100, 0, 1);
 
@@ -90,14 +90,14 @@ function toTimestamp(v: unknown): number | null {
 }
 
 /**
- * Accounting rule — which records count as completed wagers.
+ * Accounting rule: which records count as completed wagers.
  *
  * Excluded:
  *   - `rejected*` (e.g. `rejectedNotFound`): the bet never stood. The archive
  *     records `payout === amount` on these because the stake was returned, so
  *     counting them would add phantom break-even bets to every metric and
  *     inflate both Total Wagered and Total Returned by the same amount.
- *   - `cancel*` / `void*`: same reasoning — the wager was unwound.
+ *   - `cancel*` / `void*`: same reasoning, the wager was unwound.
  *   - `active: true`: still open at export time, so the outcome is unknown.
  *     Including it would book a guaranteed loss for a bet that may yet win.
  *
@@ -272,7 +272,7 @@ function parseRecord(
   // Prefer the recorded multiplier, but recompute when it is absent or
   // contradicts stake/payout. A zero stake makes payout/stake undefined, so
   // the recorded value is kept when there is one and the field stays null when
-  // there is not — either way it never becomes NaN or Infinity.
+  // there is not, either way it never becomes NaN or Infinity.
   const recordedMultiplier = num(d.payoutMultiplier);
   const derivedMultiplier = stake > 0 ? payout / stake : null;
   const payoutMultiplier =
@@ -369,7 +369,7 @@ function looksLikeBet(entry: unknown): boolean {
  *
  * @throws {ArchiveParseError} when the file is not JSON, or is JSON that
  * carries nothing recognisable as a bet archive. Individual bad records never
- * throw — they land in `quality.excluded`.
+ * throw, they land in `quality.excluded`.
  */
 export function parseStakeArchive(
   rawJson: string,

@@ -6,7 +6,7 @@ import { formatCount, formatPercent, formatSignedPercent } from '@/utils/format'
 /**
  * The standard aggregate table.
  *
- * Every grouped view — by game, by odds band, by risk level, by hour — renders
+ * Every grouped view (by game, by odds band, by risk level, by hour) renders
  * through this, so a row means the same thing wherever it appears.
  */
 export function GroupStatsTable({
@@ -75,7 +75,7 @@ export function GroupStatsTable({
       title: 'Net P&L divided by amount wagered',
       render: (row) =>
         row.roi === null ? (
-          <span className="text-faint">—</span>
+          <span className="text-faint">-</span>
         ) : (
           <SignedValue value={row.roi} format={(v) => `${v.toFixed(1)}%`} />
         ),
@@ -97,7 +97,7 @@ export function GroupStatsTable({
       sortValue: (row) => row.averageStake ?? 0,
       render: (row) => (
         <span className="tnum font-mono">
-          {row.averageStake === null ? '—' : formatAmount(row.averageStake)}
+          {row.averageStake === null ? '-' : formatAmount(row.averageStake)}
         </span>
       ),
     },
@@ -150,10 +150,10 @@ export function GroupStatsTable({
               {[
                 ['Bets', formatCount(row.bets)],
                 ['Wagered', formatAmount(row.wagered)],
-                ['ROI', row.roi === null ? '—' : formatSignedPercent(row.roi)],
+                ['ROI', row.roi === null ? '-' : formatSignedPercent(row.roi)],
                 ['Returned', formatAmount(row.returned)],
                 ['Win rate', formatPercent(row.winRate)],
-                ['Avg bet', row.averageStake === null ? '—' : formatAmount(row.averageStake)],
+                ['Avg bet', row.averageStake === null ? '-' : formatAmount(row.averageStake)],
               ].map(([term, value]) => (
                 <div key={term} className="min-w-0">
                   <dt className="wl-meta truncate">{term}</dt>
@@ -258,7 +258,7 @@ export function RoiStrip({ rows }: { rows: GroupStats[] }) {
           />
           <span className="tnum shrink-0 font-mono text-[11px]">
             {row.roi === null ? (
-              <span className="text-faint">—</span>
+              <span className="text-faint">-</span>
             ) : (
               <SignedValue value={row.roi} format={(v) => `${v.toFixed(1)}%`} />
             )}

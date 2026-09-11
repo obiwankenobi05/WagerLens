@@ -91,7 +91,7 @@ export function PnlChart({ mode, equity, periods, currency, formatAmount }: PnlC
     return (
       <ChartFrame height={240}>
         <ChartEmpty>
-          A single {isCumulative ? 'bet' : 'period'} at {formatDateTime(only.x)} — {formatSigned(only.value, formatAmount)}{' '}
+          A single {isCumulative ? 'bet' : 'period'} at {formatDateTime(only.x)}, {formatSigned(only.value, formatAmount)}{' '}
           {code}. A trend needs at least two points.
         </ChartEmpty>
       </ChartFrame>

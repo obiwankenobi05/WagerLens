@@ -2,7 +2,7 @@
  * WagerLens internal data model.
  *
  * The UI and the analytics layer talk exclusively in these types. Raw Stake
- * archive shapes never escape `src/parsers/` — that boundary is what lets the
+ * archive shapes never escape `src/parsers/`, that boundary is what lets the
  * rest of the app assume every number is finite and every date is valid.
  */
 
@@ -27,7 +27,7 @@ export interface SportsbookLeg {
   odds: number | null;
   /**
    * Probability recorded alongside the leg in the archive. This is the
-   * archive's own `probabilities` field — WagerLens reports it as recorded and
+   * archive's own `probabilities` field, WagerLens reports it as recorded and
    * makes no claim about how it was produced.
    */
   probability: number | null;
@@ -40,7 +40,7 @@ export interface SportsbookDetail {
   legs: SportsbookLeg[];
   /** Number of legs (the archive's `system` field agrees with `legs.length`). */
   legCount: number;
-  /** Product of the leg odds — what the bet would have returned per unit staked. */
+  /** Product of the leg odds, what the bet would have returned per unit staked. */
   potentialMultiplier: number | null;
   /** Cash-out multiplier offered/taken, when the archive recorded one. */
   cashoutMultiplier: number | null;
@@ -89,7 +89,7 @@ export interface MinesDetail {
 export interface BetRecord {
   /** Archive record id (the envelope id, unique per row). */
   id: string;
-  /** Inner bet id — stable across the archive, used for raw lookups. */
+  /** Inner bet id, stable across the archive, used for raw lookups. */
   betId: string;
   placedAt: Date;
   /** Epoch milliseconds; carried alongside `placedAt` for cheap sorting. */
@@ -138,7 +138,7 @@ export type ExclusionReason =
 
 /** One dropped record, retained so the data-quality panel can explain itself. */
 export interface ExcludedRecord {
-  /** Index in the source array — the only reliable handle for a malformed row. */
+  /** Index in the source array, the only reliable handle for a malformed row. */
   index: number;
   id: string | null;
   reason: ExclusionReason;

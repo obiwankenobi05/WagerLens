@@ -60,7 +60,7 @@ describe('calculateWinRate', () => {
   });
 });
 
-describe('calculateOverview — reference archive', () => {
+describe('calculateOverview: reference archive', () => {
   const overview = calculateOverview(bets, 'usdc');
 
   it('totals wagered, returned and P&L from completed bets only', () => {
@@ -108,7 +108,7 @@ describe('calculateOverview — reference archive', () => {
   });
 });
 
-describe('calculateOverview — edge cases', () => {
+describe('calculateOverview: edge cases', () => {
   it('handles an empty set without dividing by zero', () => {
     const overview = calculateOverview([], 'usdc');
     expect(overview.bets).toBe(0);
@@ -212,7 +212,7 @@ describe('calculateDrawdown', () => {
     const dd = calculateDrawdown(build([rawBet({ amount: 10, payout: 0 }), rawBet({ amount: 5, payout: 0 })]));
     expect(dd.peak).toBe(0);
     expect(dd.maxDrawdown).toBe(15);
-    // Measured against wagered, not against the (zero) peak — so it stays a
+    // Measured against wagered, not against the (zero) peak, so it stays a
     // real number instead of dividing by zero.
     expect(dd.maxDrawdownVsWagered).toBeCloseTo(100, 12);
   });
@@ -262,7 +262,7 @@ describe('calculateStreaks', () => {
     expect(streaks.averageLossStreak).toBe(3);
   });
 
-  it('treats a push as transparent — it neither breaks nor extends a run', () => {
+  it('treats a push as transparent: it neither breaks nor extends a run', () => {
     const streaks = calculateStreaks(
       build([
         rawBet({ amount: 1, payout: 0 }), // L

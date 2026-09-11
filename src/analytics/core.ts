@@ -8,16 +8,16 @@
  * completed wager, so:
  *
  *   Total Wagered  = Σ stake
- *   Total Returned = Σ payout            (payout is gross — it includes stake)
+ *   Total Returned = Σ payout            (payout is gross, it includes stake)
  *   Net P&L        = Total Returned − Total Wagered
  *   ROI            = Net P&L / Total Wagered × 100
  *
  * Because payout is gross, a bet returning exactly its stake is a push, not a
- * win — so Net P&L is the realised change in balance, not a second helping of
+ * win, so Net P&L is the realised change in balance, not a second helping of
  * the stake.
  *
  * ROI is undefined when nothing was wagered; it is reported as `null` rather
- * than 0 or Infinity so the UI can say "—" instead of a misleading number.
+ * than 0 or Infinity so the UI can say "-" instead of a misleading number.
  *
  * Win rate counts wins against wins + losses. Pushes sit outside both, so a run
  * of exact break-even rounds neither helps nor hurts it.
@@ -186,7 +186,7 @@ export interface DrawdownStats {
   /** Deepest fall below a prior peak, as a positive magnitude. */
   maxDrawdown: number;
   /**
-   * The deepest fall as a share of everything staked, 0–100.
+   * The deepest fall as a share of everything staked, 0 to 100.
    *
    * Deliberately *not* measured against the peak: cumulative P&L starts at
    * zero, so the peak is not a capital base and a small peak produces a
@@ -212,7 +212,7 @@ export interface DrawdownStats {
  * Computes drawdown statistics.
  *
  * Drawdown is measured against the running peak of cumulative P&L, with the
- * peak floored at zero — an account that has never been in profit is
+ * peak floored at zero, an account that has never been in profit is
  * considered to be drawn down from its starting point, which is what a bettor
  * means by "how far down am I from my best".
  */
@@ -290,7 +290,7 @@ export function calculateDrawdown(bets: BetRecord[]): DrawdownStats {
   };
 }
 
-/** Win/loss run statistics. Descriptive only — runs carry no predictive weight. */
+/** Win/loss run statistics. Descriptive only, runs carry no predictive weight. */
 export interface StreakStats {
   /** Signed run length in progress: +3 = three wins, −3 = three losses. */
   currentStreak: number;
@@ -301,7 +301,7 @@ export interface StreakStats {
   averageLossStreak: number | null;
   winStreakCount: number;
   lossStreakCount: number;
-  /** Every completed run, oldest first — used by the streak visualisation. */
+  /** Every completed run, oldest first, used by the streak visualisation. */
   runs: Array<{ type: 'win' | 'loss'; length: number; startedAt: Date; endedAt: Date }>;
 }
 

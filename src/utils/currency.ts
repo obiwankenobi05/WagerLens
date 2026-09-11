@@ -1,7 +1,7 @@
 /**
  * Currency conversion.
  *
- * PRIVACY NOTE — read before changing anything here.
+ * PRIVACY NOTE: read before changing anything here.
  *
  * Fetching a live rate is the only outbound request WagerLens ever makes, and
  * it is off until the user turns it on. What leaves the device is a list of
@@ -11,7 +11,7 @@
  *
  * Conversion is applied as a transformation over normalised bets, so every
  * analytics function keeps working unchanged and the original amounts are
- * never mutated — switching conversion off restores the recorded figures
+ * never mutated, switching conversion off restores the recorded figures
  * exactly.
  */
 
@@ -87,7 +87,7 @@ const FIAT_ENDPOINT = 'https://open.er-api.com/v6/latest/INR';
 async function fetchJson(url: string, signal?: AbortSignal): Promise<unknown> {
   const response = await fetch(url, {
     method: 'GET',
-    // No cookies, no auth — this request carries nothing about the user.
+    // No cookies, no auth, this request carries nothing about the user.
     credentials: 'omit',
     cache: 'no-store',
     signal,
@@ -102,7 +102,7 @@ async function fetchJson(url: string, signal?: AbortSignal): Promise<unknown> {
  * Looks up INR rates for the given currency codes.
  *
  * Crypto and fiat come from different providers, so only the endpoints actually
- * needed are called. A failure in one does not discard the other's results —
+ * needed are called. A failure in one does not discard the other's results:
  * partial rates are better than none, and the UI reports which codes are
  * missing.
  *
@@ -183,7 +183,7 @@ export function missingRates(codes: string[], table: RateTable | null): string[]
  * Returns a new array; the input is never mutated, and `raw` still points at
  * the original archive record. Bets in a currency with no rate are dropped and
  * reported separately, because silently leaving them at face value would mix
- * denominations inside one total — the exact error this app refuses to make.
+ * denominations inside one total, the exact error this app refuses to make.
  */
 export function convertBets(
   bets: BetRecord[],
@@ -240,7 +240,7 @@ export function saveCachedRates(table: RateTable): void {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(table));
   } catch {
-    // Storage unavailable — the rate simply will not survive a reload.
+    // Storage unavailable, the rate simply will not survive a reload.
   }
 }
 
@@ -293,7 +293,7 @@ export function relativeAge(timestamp: number, now = Date.now()): string {
 
 /** Formats an INR amount with the ₹ symbol and Indian digit grouping. */
 export function formatInr(value: number, decimals = 2): string {
-  if (!Number.isFinite(value)) return '—';
+  if (!Number.isFinite(value)) return '-';
   return `₹${new Intl.NumberFormat('en-IN', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,

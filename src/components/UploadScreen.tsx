@@ -43,7 +43,7 @@ const STEPS: Array<{ n: string; text: string; hint?: string }> = [
   {
     n: '4',
     text: 'Download the JSON for each date you want to analyse.',
-    hint: 'Stake exports one file per day — there is no way to cover a range in a single file.',
+    hint: 'Stake exports one file per day. There is no way to cover a range in a single file.',
   },
   {
     n: '5',
@@ -111,7 +111,7 @@ function ExportGuide() {
             ))}
           </ol>
           <p className="border-t border-line px-3 py-2.5 text-[11px] leading-relaxed text-muted sm:px-4">
-            Files whose dates overlap are fine — a bet appearing in two exports is counted once.
+            Files whose dates overlap are fine. A bet appearing in two exports is counted once.
           </p>
         </div>
       </div>
@@ -166,7 +166,7 @@ export function UploadScreen({
               analyzed.
             </h1>
             <p className="mt-4 max-w-[44ch] text-[13px] leading-relaxed text-muted sm:text-sm">
-              Upload your Stake betting archives to see where the money went — P&amp;L over time,
+              Upload your Stake betting archives to see where the money went: P&amp;L over time,
               drawdowns, game breakdowns and the full ledger behind them.
             </p>
           </div>
@@ -244,7 +244,7 @@ export function UploadScreen({
                 </span>
                 <div>
                   <p className="text-sm text-ink">Drop your Stake JSON files here</p>
-                  <p className="mt-1.5 text-[11px] text-muted">One file per date — add as many as you like</p>
+                  <p className="mt-1.5 text-[11px] text-muted">One file per date. Add as many as you like</p>
                 </div>
                 <span className="wl-button wl-button-primary min-h-[44px] px-4">Choose JSON files</span>
               </div>
@@ -254,7 +254,7 @@ export function UploadScreen({
           <p className="mt-4 flex items-start gap-2 text-[11px] leading-relaxed text-muted">
             <Lock size={12} strokeWidth={1.75} className="mt-0.5 shrink-0" aria-hidden />
             <span>
-              Parsed locally. Your betting history never leaves this device — there is no server,
+              Parsed locally. Your betting history never leaves this device. There is no server,
               no account and no upload.
             </span>
           </p>
@@ -275,7 +275,7 @@ export function UploadScreen({
 
           <p className="mt-6 text-[11px] leading-relaxed text-faint">
             WagerLens describes what is in your archive. It is an analytics tool, not betting
-            advice — historical results do not predict future outcomes.
+            advice. Historical results do not predict future outcomes.
           </p>
         </div>
       </main>

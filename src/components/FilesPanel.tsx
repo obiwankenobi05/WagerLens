@@ -12,7 +12,7 @@ type FileStat = ReturnType<typeof useArchive>['fileStats'][number];
  *
  * Stake exports one file per date, so this doubles as a per-day summary. Rows
  * are clickable to scope the whole dashboard to a single file, which is what
- * "stats individually per file" means in practice — every metric on the page
+ * "stats individually per file" means in practice, every metric on the page
  * recomputes rather than this panel showing a second, parallel set of numbers.
  */
 export function FilesPanel({
@@ -67,7 +67,7 @@ export function FilesPanel({
               ` → ${formatDate(row.file.range.to)}`}
           </span>
         ) : (
-          <span className="text-faint">—</span>
+          <span className="text-faint">-</span>
         ),
     },
     {
@@ -98,7 +98,7 @@ export function FilesPanel({
       sortValue: (row) => row.roi ?? Number.NEGATIVE_INFINITY,
       render: (row) =>
         row.roi === null ? (
-          <span className="text-faint">—</span>
+          <span className="text-faint">-</span>
         ) : (
           <SignedValue value={row.roi} format={(v) => `${v.toFixed(1)}%`} />
         ),
@@ -149,7 +149,7 @@ export function FilesPanel({
           : undefined
       }
     >
-      {/* Cards on phones — a seven-column table is unreadable there. */}
+      {/* Cards on phones, a seven-column table is unreadable there. */}
       <ul className="flex flex-col gap-1.5 sm:hidden">
         {fileStats.map((row) => {
           const active = selectedSet.has(row.file.id);
@@ -177,7 +177,7 @@ export function FilesPanel({
                     {row.file.error ? 'Unreadable' : `${formatCount(row.bets)} bets · ${formatBytes(row.file.size)}`}
                   </span>
                   <span className="wl-meta">
-                    {row.roi === null ? '—' : `${row.roi > 0 ? '+' : ''}${row.roi.toFixed(1)}% ROI`}
+                    {row.roi === null ? '-' : `${row.roi > 0 ? '+' : ''}${row.roi.toFixed(1)}% ROI`}
                   </span>
                 </span>
               </button>
@@ -214,7 +214,7 @@ export function FilesPanel({
           <ul className="mt-1.5 flex flex-col gap-1">
             {failed.map((row) => (
               <li key={row.file.id} className="text-[11px] leading-relaxed text-muted">
-                <span className="font-mono text-ink">{row.file.name}</span> — {row.file.error?.message}
+                <span className="font-mono text-ink">{row.file.name}</span>: {row.file.error?.message}
               </li>
             ))}
           </ul>

@@ -46,7 +46,7 @@ describe('axisWidthFor', () => {
   });
 
   it('allows a character of headroom for ticks rounded past the data', () => {
-    // 9.8k of data can produce a 10.0k tick — one character longer.
+    // 9.8k of data can produce a 10.0k tick, one character longer.
     const format = makeAxisFormatter([9800]);
     const width = axisWidthFor([9800], format);
     expect(width).toBeGreaterThan(format(9800).length * 10);
